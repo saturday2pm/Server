@@ -8,9 +8,9 @@ using ProtocolCS;
 
 namespace Server.Ingame
 {
-    public sealed partial class IngameService : Service<IngameService>
+    public partial class IngameService : Service<IngameService>
     {
-        private GameProcessor gameProcessor { get; set; }
+        internal GameProcessor gameProcessor { get; protected set; }
 
         public async void OnFrame(Frame p)
         {

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Concurrent;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -9,6 +10,7 @@ using ProtocolCS;
 namespace Server.Ingame
 {
     using Concurrency;
+    using AI;
 
     class GameProcessor
     {
@@ -26,7 +28,14 @@ namespace Server.Ingame
         {
             get
             {
-                return players.Length == eventArrived.Count;
+                return (players.Length - botPlayerCount) == eventArrived.Count;
+            }
+        }
+        public bool isZombieGame
+        {
+            get
+            {
+                return players.Length == botPlayerCount;
             }
         }
 
@@ -34,6 +43,9 @@ namespace Server.Ingame
 
         private HashSet<int> eventArrived { get; set; }
         
+        private ConcurrentBag<Frame> frameBuffer { get; set; }
+
+        private int botPlayerCount { get; set; }
 
         public GameProcessor(IngameService[] players)
         {
@@ -41,6 +53,7 @@ namespace Server.Ingame
             
             this.eventBuffer = new List<IngameEvent>();
             this.boundTask = new BoundTask();
+            this.frameBuffer = new ConcurrentBag<Frame>();
 
             this.currentFrameNo = 0;
             this.seed = 0;
@@ -55,11 +68,41 @@ namespace Server.Ingame
             boundTask.Run(() => eventBuffer.AddRange(ev));
             eventArrived.Add(playerId);
         }
+        public void ToAutoPlayer(int playerId)
+        {
+            boundTask.Run(() => {
+                for (int i=0;i<players.Length;i++)
+                {
+                    if (players[i].currentPlayerId == playerId)
+                        players[i] = AutoPlayer.MigrateFrom(players[i]);
+                }
+            });
+        }
 
         public Task<IngameEvent[]> Aggregate()
         {
+            frameBuffer.Add(new Frame() {
+                frameNo = currentFrameNo,
+                events = eventBuffer.ToArray()
+            });
             eventArrived.Clear();
-            return boundTask.Run(() => eventBuffer.ToArray());
+
+            return boundTask.Run(() => {
+                foreach(var player in players)
+                {
+                    if (player.isBotPlayer)
+                        eventBuffer.AddRange(((AutoPlayer)player).ProcessTurn());
+                }
+                return eventBuffer.ToArray();
+            });
+        }
+
+        public Frame[] GetPreviousFrames()
+        {
+            // ****TODO**** : LOCK
+            Frame[] ary = new Frame[currentFrameNo];
+            frameBuffer.CopyTo(ary, 0);
+            return ary;
         }
     }
 }
