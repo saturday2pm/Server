@@ -7,6 +7,12 @@ class Waypoint {
 ```
 
 ```cs
+class Join {
+  
+}
+```
+
+```cs
 class IngamePacket {
   public DateTime timestamp {get;set;}
 }
@@ -22,4 +28,6 @@ class Move : IngamePacket {
   public Waypoint from {get;set;}
   public Waypoint to {get;set;}
 }
+
+
 ```
