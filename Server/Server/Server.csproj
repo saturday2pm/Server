@@ -51,11 +51,18 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Constants\Constants.MatchMaking.cs" />
+    <Compile Include="MatchMaking\IMatchMaker.cs" />
+    <Compile Include="MatchMaking\Match.cs" />
+    <Compile Include="MatchMaking\MatchMaker.cs" />
+    <Compile Include="MatchMaking\MatchMaker.Redis.cs" />
+    <Compile Include="MatchMaking\MatchMaker.Simple.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+    <None Include="MatchMaking\readme.md" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>

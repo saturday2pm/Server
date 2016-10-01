@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Concurrent;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -10,100 +11,61 @@ using WebSocketSharp.Server;
 
 using ProtocolCS;
 
+using Server.MatchMaking;
+using Server.Ingame;
+
 namespace Server
 {
-    public class Service : WebSocketBehavior
-    {
-        private Dictionary<Type, MethodInfo> handlers { get; set; }
-
-        public Service()
-        {
-            handlers = new Dictionary<Type, MethodInfo>();
-
-            var handlerCandidates = GetType().GetMethods(
-                BindingFlags.Public | BindingFlags.Instance)
-                .Where(x => x.GetParameters().Length == 1)
-                .Where(x => x.GetParameters().First().ParameterType.Namespace == nameof(ProtocolCS))
-                .Where(x => x.ReturnType == typeof(void));
-
-            foreach (var candidate in handlerCandidates)
-            {
-                var packetType = candidate
-                    .GetParameters().First()
-                    .ParameterType;
-
-                handlers[packetType] = candidate;
-            }
-        }
-
-        protected override void OnMessage(MessageEventArgs e)
-        {
-            var json = e.Data;
-            object packet = null;
-
-            try
-            {
-                packet = Serializer.ToObject(json);
-            }
-            catch(Exception ex)
-            {
-            }
-
-            if (packet == null)
-                Console.WriteLine($"Parsing Error : {e.Data}");
-            else if (handlers.ContainsKey(packet.GetType()) == false)
-                Console.WriteLine($"Unkown Packet : {e.Data}");
-            else
-            {
-                var handler = handlers[packet.GetType()];
-
-                try
-                {
-                    handler.Invoke(null, new object[] { packet });
-                }
-                catch(Exception ex)
-                {
-                    Console.WriteLine(ex);
-                }
-            }
-        }
-    }
-    public sealed class MatchMakingService : Service
-    {
-        public static readonly string Path = "/mmaker";
-
-        public void OnJoinQueue(JoinQueue p)
-        {
-            Console.WriteLine("JoinQueue");
-        }
-    }
-
-    public sealed class IngameService : Service
-    {
-        public static readonly string Path = "/game";
-
-        public void OnMoveEvent(MoveEvent p)
-        {
-            Console.WriteLine("OnMoveEvent");
-        }
-        public void OnUpgradeEvent(UpgradeEvent e)
-        {
-            Console.WriteLine("OnUpgradeEvent");
-        }
-    }
-
     class Program
     {
+        static WebSocketServer server { get; set; }
+
+        static void BootstrapServices(string[] args)
+        {
+            if (server == null)
+                throw new InvalidOperationException("server is null");
+
+            foreach (var arg in args)
+            {
+                if (arg == "--matchmaking")
+                    server.AddWebSocketService<MatchMakingService>(MatchMakingService.Path);
+                if (arg == "--game")
+                    server.AddWebSocketService<IngameService>(IngameService.Path);
+            }
+        }
+
+        static void Shutdown()
+        {
+            Console.WriteLine("Close Server...");
+
+            server.Stop(CloseStatusCode.Away, "close server");
+        }
+
         static void Main(string[] args)
         {
-            var server = new WebSocketServer();
+            server = new WebSocketServer();
 
-            server.AddWebSocketService<MatchMakingService>(MatchMakingService.Path);
-            server.AddWebSocketService<IngameService>(IngameService.Path);
+            if (args.Length == 0)
+            {
+                args = new string[]
+                {
+                    "--matchmaking",
+                    "--game"
+                };
+            }
 
+            BootstrapServices(args);
+            
             server.Start();
-            Console.Read();
-            server.Stop();
+
+            while (true)
+            {
+                var ch = Console.Read();
+
+                if (ch == 'q') break;
+            }
+
+            Shutdown();
         }
     }
 }
