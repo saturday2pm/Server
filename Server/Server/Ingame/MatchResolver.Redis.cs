@@ -7,7 +7,7 @@ using Server.MatchMaking;
 
 namespace Server.Ingame
 {
-    class MatchResolverRedis : MatchResolver
+    class MatchResolverRedis : IMatchResolver
     {
         public Task<Match> GetMatchInfo(string matchToken)
         {

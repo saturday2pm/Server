@@ -44,7 +44,7 @@ namespace Server
         static void Main(string[] args)
         {
             server = new WebSocketServer();
-
+            
             if (args.Length == 0)
             {
                 args = new string[]

@@ -34,6 +34,11 @@ namespace Server.MatchMaking
                     // TODO
                     Thread.Sleep(10);
                 }
+
+                ThreadPool.QueueUserWorkItem(_ =>
+                {
+                    matchMaker.callback?.Invoke(match);
+                });
             }
         }
     }

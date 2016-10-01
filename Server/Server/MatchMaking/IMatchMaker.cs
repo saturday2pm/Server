@@ -8,6 +8,8 @@ namespace Server.MatchMaking
 {
     interface IMatchMaker
     {
+        Action<Match> callback { get; set; }
+
         void Enqueue(int playerId);
 
         Match Poll();

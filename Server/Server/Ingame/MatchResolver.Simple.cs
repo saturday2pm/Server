@@ -8,7 +8,7 @@ using Server.MatchMaking;
 
 namespace Server.Ingame
 {
-    class MatchResolverSimple : MatchResolver
+    class MatchResolverSimple : IMatchResolver
     {
         private Dictionary<string, MatchMaking.Match> matches { get; set; }
 

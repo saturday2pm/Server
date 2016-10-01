@@ -51,14 +51,28 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Concurrency\BoundTask.cs" />
+    <Compile Include="Concurrency\BoundTaskPool.cs" />
     <Compile Include="Constants\Constants.MatchMaking.cs" />
+    <Compile Include="Ingame\GameProcessor.cs" />
+    <Compile Include="Ingame\IngameService.cs" />
+    <Compile Include="Ingame\IngameService.Events.cs" />
+    <Compile Include="Ingame\IngameService.Match.cs" />
+    <Compile Include="Ingame\MatchProcessor.cs" />
+    <Compile Include="Ingame\IMatchResolver.cs" />
+    <Compile Include="Ingame\MatchResolver.cs" />
+    <Compile Include="Ingame\MatchResolver.Redis.cs" />
+    <Compile Include="Ingame\MatchResolver.Simple.cs" />
+    <Compile Include="MatchMaking\Elo.cs" />
     <Compile Include="MatchMaking\IMatchMaker.cs" />
     <Compile Include="MatchMaking\Match.cs" />
     <Compile Include="MatchMaking\MatchMaker.cs" />
     <Compile Include="MatchMaking\MatchMaker.Redis.cs" />
     <Compile Include="MatchMaking\MatchMaker.Simple.cs" />
+    <Compile Include="MatchMaking\MatchMakingService.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Service.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

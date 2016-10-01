@@ -11,6 +11,8 @@ namespace Server.MatchMaking
 
     class MatchMakerSimple : IMatchMaker
     {
+        public Action<Match> callback { get; set; }
+
         private ConcurrentQueue<int> queue { get; set; }
         private int targetPlayersForNextMatch { get; set; }
 

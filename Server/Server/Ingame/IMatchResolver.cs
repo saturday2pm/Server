@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Server.Ingame
 {
-    interface MatchResolver
+    interface IMatchResolver
     {
         Task RegisterMatch(string matchToken, MatchMaking.Match match);
 
