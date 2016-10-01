@@ -3,8 +3,15 @@ class Player {
   public string name {get;set;}
 }
 
+// 경유지가 될 수 있는 모든 곳
+// 주로 성
 class Waypoint {
+  // 좌표는 맵이 가지고 있으므로 패킷에서는 아이디로만 관리한다.
   public int id {get;set;}
+}
+class Castle : Waypoint {
+  // 업그레이드 정도 (1, 2, 3...)
+  public int level {get;set;}
 }
 ```
 
@@ -46,7 +53,10 @@ class Move : IngameEvent {
   public Waypoint to {get;set;}
 }
 
-
+class Upgrade : IngameEvent {
+  public Castle castle {get;set;}
+  
+}
 ```
 
 클라이언트와 서버는 서로 동기화되는 프레임레이트를 가진다.<br>
