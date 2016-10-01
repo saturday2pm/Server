@@ -27,7 +27,7 @@ namespace Server.MatchMaking
             while (true)
             {
                 Match match = null;
-                while (match != null)
+                while (match == null)
                 {
                     match = matchMaker.Poll();
 

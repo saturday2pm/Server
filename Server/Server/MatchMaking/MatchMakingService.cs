@@ -38,7 +38,7 @@ namespace Server.MatchMaking
         {
             Console.WriteLine("OnMatchCreated");
 
-            var matchId = new Guid().ToString();
+            var matchId = Guid.NewGuid().ToString();
             var packet = new MatchSuccess()
             {
                 gameServerAddress = "ws://localhost/game",

@@ -67,7 +67,7 @@
     <Compile Include="MatchMaking\IMatchMaker.cs" />
     <Compile Include="MatchMaking\Match.cs" />
     <Compile Include="MatchMaking\MatchMaker.cs" />
-    <Compile Include="MatchMaking\MatchMaker.Redis.cs" />
+    <Compile Include="MatchMaking\MatchMaker.Elo.cs" />
     <Compile Include="MatchMaking\MatchMaker.Simple.cs" />
     <Compile Include="MatchMaking\MatchMakingService.cs" />
     <Compile Include="Program.cs" />

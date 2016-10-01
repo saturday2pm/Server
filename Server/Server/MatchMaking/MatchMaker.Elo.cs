@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Server.MatchMaking
 {
-    class MatchMakerRedis : IMatchMaker
+    class MatchMakerElo : IMatchMaker
     {
         public Action<Match> callback
         {
