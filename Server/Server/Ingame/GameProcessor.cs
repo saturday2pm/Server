@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.Concurrent;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 using ProtocolCS;
@@ -31,6 +32,9 @@ namespace Server.Ingame
                 return (players.Length - botPlayerCount) == eventArrived.Count;
             }
         }
+        /// <summary>
+        /// 플레이어 다나가고, 봇만 남아있는 좀비방인지
+        /// </summary>
         public bool isZombieGame
         {
             get
@@ -45,7 +49,7 @@ namespace Server.Ingame
         
         private ConcurrentBag<Frame> frameBuffer { get; set; }
 
-        private int botPlayerCount { get; set; }
+        private int botPlayerCount;
 
         public GameProcessor(IngameService[] players)
         {
@@ -70,6 +74,7 @@ namespace Server.Ingame
         }
         public void ToAutoPlayer(int playerId)
         {
+            Interlocked.Increment(ref botPlayerCount);
             boundTask.Run(() => {
                 for (int i=0;i<players.Length;i++)
                 {

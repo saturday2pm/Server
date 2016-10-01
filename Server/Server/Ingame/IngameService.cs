@@ -26,6 +26,11 @@ namespace Server.Ingame
 
             // 나간 플레이어는 봇으로 대체한다.
             gameProcessor.ToAutoPlayer(currentPlayerId);
+
+            if (gameProcessor.isZombieGame)
+            {
+                // 좀비 방 -> 폭파
+            }
         }
     }
 }
