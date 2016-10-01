@@ -1,8 +1,10 @@
 ```cs
 class Player {
+  public string name {get;set;}
 }
 
 class Waypoint {
+  public int id {get;set;}
 }
 ```
 
