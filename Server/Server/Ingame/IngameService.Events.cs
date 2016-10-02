@@ -10,7 +10,7 @@ namespace Server.Ingame
 {
     public partial class IngameService : Service<IngameService>
     {
-        internal GameProcessor gameProcessor { get; protected set; }
+        internal GameProcessor gameProcessor { get; set; }
 
         public async void OnFrame(Frame p)
         {
@@ -19,7 +19,7 @@ namespace Server.Ingame
             EnsureGameStarted();
 
             if (p.frameNo > gameProcessor.currentFrameNo)
-                throw new ArgumentOutOfRangeException("p.frameNo > currentFrameNo")
+                throw new ArgumentOutOfRangeException("p.frameNo > currentFrameNo");
 
             gameProcessor.AddEvents(currentPlayerId, p.events);
             if (gameProcessor.canAggregate)

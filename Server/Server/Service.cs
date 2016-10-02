@@ -74,7 +74,7 @@ namespace Server
             Sessions.CloseSession(this.ID, code, reason);
         }
 
-        protected void SendPacket(PacketBase packet)
+        protected virtual void SendPacket(PacketBase packet)
         {
             try
             {

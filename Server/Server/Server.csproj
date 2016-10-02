@@ -51,6 +51,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AI\AutoPlayer.cs" />
+    <Compile Include="AI\DummyAi.cs" />
+    <Compile Include="AI\IAi.cs" />
     <Compile Include="Concurrency\BoundTask.cs" />
     <Compile Include="Concurrency\BoundTaskPool.cs" />
     <Compile Include="Constants\Constants.MatchMaking.cs" />
@@ -85,6 +88,7 @@
       <Name>ProtocolCS</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
