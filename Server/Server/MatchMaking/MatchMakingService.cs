@@ -54,6 +54,7 @@ namespace Server.MatchMaking
             var players = match.playerIds.Select(x => GetSessionById(x));
             foreach (var player in players)
             {
+                player.clientState = ClientState.MatchCreated;
                 player.SendPacket(packet);
             }
         }
@@ -67,6 +68,8 @@ namespace Server.MatchMaking
 
             currentPlayerId = p.senderId;
             matchMaker.Enqueue(p.senderId);
+
+            clientState = ClientState.QueueJoined;
         }
         public void OnLeaveQueue(LeaveQueue p)
         {
@@ -75,6 +78,8 @@ namespace Server.MatchMaking
             if (clientState == ClientState.Ready ||
                 clientState == ClientState.Closing)
                 throw new InvalidOperationException("clientState != .QueueJoinned, .MatchCreated");
+
+            clientState = ClientState.Ready;
         }
     }
 }
