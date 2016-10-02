@@ -88,6 +88,24 @@ namespace Server
             }
         }
 
+        protected override void OnOpen()
+        {
+            Version clientVersion = null;
+            if (Version.TryParse(
+                Context.QueryString.Get("version"),
+                out clientVersion) == false)
+            {
+                ErrorClose(CloseStatusCode.InvalidData, "invalid version string");
+                return;
+            }
+
+            if (ProtocolCS.Constants.ProtocolVersion.version
+                != clientVersion)
+            {
+                ErrorClose(CloseStatusCode.ProtocolError, "serverVersion != clientVersion");
+                return;
+            }
+        }
         protected override void OnMessage(MessageEventArgs e)
         {
             var json = e.Data;
