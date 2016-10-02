@@ -17,6 +17,8 @@ namespace Server.MatchMaking
         private static IMatchMaker matchMaker { get; set; }
         private static IMatchResolver matchResolver { get; set; }
 
+        private ClientState clientState { get; set; }
+
         static MatchMakingService()
         {
             matchMaker = MatchMaker.Create<MatchMakerSimple>();
@@ -27,7 +29,7 @@ namespace Server.MatchMaking
 
         public MatchMakingService()
         {
-
+            clientState = ClientState.Ready;
         }
 
         /// <summary>
@@ -60,12 +62,19 @@ namespace Server.MatchMaking
         {
             Console.WriteLine("JoinQueue");
 
+            if (clientState != ClientState.Ready)
+                throw new InvalidOperationException("clientState != .Ready");
+
             currentPlayerId = p.senderId;
             matchMaker.Enqueue(p.senderId);
         }
         public void OnLeaveQueue(LeaveQueue p)
         {
             Console.WriteLine("LeaveQueue");
+
+            if (clientState == ClientState.Ready ||
+                clientState == ClientState.Closing)
+                throw new InvalidOperationException("clientState != .QueueJoinned, .MatchCreated");
         }
     }
 }
