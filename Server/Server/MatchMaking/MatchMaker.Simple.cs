@@ -30,7 +30,7 @@ namespace Server.MatchMaking
 
         public Match Poll()
         {
-            if (queue.Count <= targetPlayersForNextMatch)
+            if (queue.Count < targetPlayersForNextMatch)
                 return null;
 
             int[] players = new int[targetPlayersForNextMatch];
