@@ -18,14 +18,18 @@ namespace Server.Ingame
 
             EnsureGameStarted();
 
+            if (p.frameNo > gameProcessor.currentFrameNo)
+                throw new ArgumentOutOfRangeException("p.frameNo > currentFrameNo")
+
             gameProcessor.AddEvents(currentPlayerId, p.events);
             if (gameProcessor.canAggregate)
             {
                 // 이번 프레임 브로드캐스팅
-                var aggregatedEvents = await gameProcessor.Aggregate();
+                var frameNo = gameProcessor.currentFrameNo;
+                var aggregatedEvents = await gameProcessor.Step();
                 var packet = new Frame()
                 {
-                    frameNo = gameProcessor.currentFrameNo,
+                    frameNo = frameNo,
                     events = aggregatedEvents
                 };
 

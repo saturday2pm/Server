@@ -84,13 +84,19 @@ namespace Server.Ingame
             });
         }
 
-        public Task<IngameEvent[]> Aggregate()
+        /// <summary>
+        /// 현재 프레임을 끝내고, 다음 프레임을 준비한다.
+        /// </summary>
+        /// <returns>이번 프레임에서 발행한 이벤트들</returns>
+        public Task<IngameEvent[]> Step()
         {
-            frameBuffer.Add(new Frame() {
+            frameBuffer.Add(new Frame()
+            {
                 frameNo = currentFrameNo,
                 events = eventBuffer.ToArray()
             });
             eventArrived.Clear();
+            currentFrameNo++;
 
             return boundTask.Run(() => {
                 foreach(var player in players)
@@ -98,7 +104,9 @@ namespace Server.Ingame
                     if (player.isBotPlayer)
                         eventBuffer.AddRange(((AutoPlayer)player).ProcessTurn());
                 }
-                return eventBuffer.ToArray();
+                var events = eventBuffer.ToArray();
+                eventBuffer.Clear();
+                return events;
             });
         }
 
