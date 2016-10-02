@@ -43,7 +43,11 @@ namespace Server
 
         static void Main(string[] args)
         {
-            server = new WebSocketServer();
+            server = new WebSocketServer()
+            {
+                ReuseAddress = true,
+                KeepClean = true
+            };
             
             if (args.Length == 0)
             {
