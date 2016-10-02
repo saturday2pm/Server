@@ -33,6 +33,7 @@ namespace Server
         static Service()
         {
             handlers = new Dictionary<Type, MethodInfo>();
+            sessions = new ConcurrentDictionary<int, T>();
 
             var handlerCandidates = typeof(T).GetMethods(
                 BindingFlags.Public | BindingFlags.Instance)
@@ -111,6 +112,12 @@ namespace Server
             var json = e.Data;
             object packet = null;
 
+            if (e.IsText == false)
+            {
+                ErrorClose(CloseStatusCode.ProtocolError, "only json data accepted");
+                return;
+            }
+            
             try
             {
                 packet = Serializer.ToObject(json);
@@ -135,7 +142,7 @@ namespace Server
 
                 try
                 {
-                    handler.Invoke(null, new object[] { packet });
+                    handler.Invoke(this, new object[] { packet });
                 }
                 catch (Exception ex)
                 {
