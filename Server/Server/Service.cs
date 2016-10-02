@@ -81,7 +81,7 @@ namespace Server
             {
                 var json = Serializer.ToJson(packet);
 
-                Send(Encoding.UTF8.GetBytes(json));
+                Send(json);
             }
             catch (Exception e)
             {
