@@ -40,16 +40,16 @@ namespace Server.MatchMaking
         {
             Console.WriteLine("OnMatchCreated");
 
-            var matchId = Guid.NewGuid().ToString();
+            var matchToken = Guid.NewGuid().ToString();
             var packet = new MatchSuccess()
             {
                 gameServerAddress = "ws://localhost/game",
-                matchToken = matchId
+                matchToken = matchToken
             };
 
-            Console.WriteLine($"MatchID : {matchId}");
+            Console.WriteLine($"MatchToken : {matchToken}");
 
-            await matchResolver.RegisterMatch(matchId, match);
+            await matchResolver.RegisterMatch(matchToken, match);
 
             var players = match.playerIds.Select(x => GetSessionById(x));
             foreach (var player in players)

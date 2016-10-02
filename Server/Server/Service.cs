@@ -30,6 +30,14 @@ namespace Server
             }
         }
 
+        public bool isAlive
+        {
+            get
+            {
+                return State == WebSocketState.Open;
+            }
+        }
+
         static Service()
         {
             handlers = new Dictionary<Type, MethodInfo>();

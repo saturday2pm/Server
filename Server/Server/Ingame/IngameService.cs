@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+
+using ProtocolCS;
 using WebSocketSharp;
 
 namespace Server.Ingame
@@ -17,6 +19,15 @@ namespace Server.Ingame
         {
             // IngameService.Match.cs
             InitMatch();
+        }
+
+        public Player AsPlayer()
+        {
+            return new Player
+            {
+                id = currentPlayerId,
+                name = currentPlayerId.ToString()
+            };
         }
 
         protected override void OnClose(CloseEventArgs e)

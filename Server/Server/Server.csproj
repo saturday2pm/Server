@@ -66,6 +66,7 @@
     <Compile Include="Ingame\MatchResolver.cs" />
     <Compile Include="Ingame\MatchResolver.Redis.cs" />
     <Compile Include="Ingame\MatchResolver.Simple.cs" />
+    <Compile Include="Ingame\MatchState.cs" />
     <Compile Include="MatchMaking\ClientState.cs" />
     <Compile Include="MatchMaking\Elo.cs" />
     <Compile Include="MatchMaking\IMatchMaker.cs" />
