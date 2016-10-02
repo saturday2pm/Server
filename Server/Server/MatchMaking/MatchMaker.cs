@@ -9,6 +9,8 @@ namespace Server.MatchMaking
 {
     class MatchMaker
     {
+        public static Action<Match> onMatchCreated { get; set; }
+
         public static IMatchMaker Create<T>()
             where T : IMatchMaker, new()
         {
@@ -37,7 +39,7 @@ namespace Server.MatchMaking
 
                 ThreadPool.QueueUserWorkItem(_ =>
                 {
-                    matchMaker.callback?.Invoke(match);
+                    onMatchCreated?.Invoke(match);
                 });
             }
         }

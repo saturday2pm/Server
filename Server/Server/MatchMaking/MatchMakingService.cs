@@ -24,7 +24,7 @@ namespace Server.MatchMaking
             matchMaker = MatchMaker.Create<MatchMakerSimple>();
             matchResolver = MatchResolver.Create<MatchResolverSimple>();
 
-            matchMaker.callback = OnMatchCreated;
+            MatchMaker.onMatchCreated += OnMatchCreated;
         }
 
         public MatchMakingService()
