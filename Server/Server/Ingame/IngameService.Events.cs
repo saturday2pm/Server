@@ -33,8 +33,7 @@ namespace Server.Ingame
                     events = aggregatedEvents
                 };
 
-                foreach(var player in gameProcessor.players)
-                    player.SendPacket(packet);
+                gameProcessor.players.Broadcast(packet);
             }
         }
 

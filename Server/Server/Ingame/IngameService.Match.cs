@@ -35,28 +35,36 @@ namespace Server.Ingame
             if (matchProcessor.Join(this))
             {
                 if (matchProcessor.CanStartGame())
-                {
-                    var packet = new StartGame()
-                    {
-                        players = matchProcessor.players
-                            .Select(x => x.AsPlayer()).ToArray(),
-                        seed = 0
-                    };
-
-                    matchProcessor.players.Broadcast(packet);
-                    
-                    matchProcessor.matchState = MatchState.Started;
-                }
+                    PrepareGame(matchProcessor);
                 else
-                {
-                    var packet = new CancelGame()
-                    {
-                    };
-                    matchProcessor.players.Broadcast(packet);
-
-                    matchProcessor.matchState = MatchState.Canceled;
-                }
+                    CancelGame(matchProcessor);
             }
+        }
+
+        private static void PrepareGame(MatchProcessor matchProcessor)
+        {
+            var packet = new StartGame()
+            {
+                players = matchProcessor.players
+                            .Select(x => x.AsPlayer()).ToArray(),
+                seed = 0
+            };
+
+            matchProcessor.players.Broadcast(packet);
+
+            var gameProcesssor = matchProcessor.Start();
+            foreach (var player in matchProcessor.players)
+                player.gameProcessor = gameProcesssor;
+        }
+
+        private static void CancelGame(MatchProcessor matchProcessor)
+        {
+            var packet = new CancelGame()
+            {
+            };
+            matchProcessor.players.Broadcast(packet);
+
+            matchProcessor.Cancel();
         }
     }
 }

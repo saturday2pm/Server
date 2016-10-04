@@ -94,7 +94,7 @@ namespace Server
                 Console.WriteLine(e);
             }
         }
-        protected virtual void SendPacket(PacketBase packet)
+        internal virtual void SendPacket(PacketBase packet)
         {
             try
             {

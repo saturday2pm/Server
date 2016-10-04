@@ -54,6 +54,7 @@
     <Compile Include="AI\AutoPlayer.cs" />
     <Compile Include="AI\DummyAi.cs" />
     <Compile Include="AI\IAi.cs" />
+    <Compile Include="BroadcastExt.cs" />
     <Compile Include="Concurrency\BoundTask.cs" />
     <Compile Include="Concurrency\BoundTaskPool.cs" />
     <Compile Include="Constants\Constants.MatchMaking.cs" />

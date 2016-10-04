@@ -48,7 +48,7 @@ namespace Server.AI
         {
             // DoNothing
         }
-        protected override void SendPacket(PacketBase packet)
+        internal override void SendPacket(PacketBase packet)
         {
             // DoNothing
             // 페이크 세션이기 때문에 실제로 보내면 안됨

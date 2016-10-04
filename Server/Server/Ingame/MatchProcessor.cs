@@ -13,8 +13,9 @@ namespace Server.Ingame
     {
         public Match match { get; private set; }
 
-        public IngameService[] players { get; set; }
-        public int joinedPlayerCount;
+        public IngameService[] players { get; private set; }
+        private int _joinedPlayerCount;
+        public int joinedPlayerCount => _joinedPlayerCount;
 
         public MatchState matchState { get; set; }
 
@@ -22,8 +23,6 @@ namespace Server.Ingame
         {
             this.match = match;
             this.players = new IngameService[match.playerIds.Length];
-
-            this.joinedPlayerCount = 0;
 
             this.matchState = MatchState.Ready;
         }
@@ -52,7 +51,7 @@ namespace Server.Ingame
 
             players[idx] = playerSession;
 
-            if (Interlocked.Increment(ref joinedPlayerCount)
+            if (Interlocked.Increment(ref _joinedPlayerCount)
                 == players.Length)
                 return true;
             return false;
@@ -69,6 +68,25 @@ namespace Server.Ingame
 
             // 접속 플레이어가 방 전체 인원과 맞는지 검사
             return joinedPlayerCount == players.Length;
+        }
+
+        public GameProcessor Start()
+        {
+            if (matchState != MatchState.Ready)
+                throw new InvalidOperationException("matchState != .Ready");
+
+            var gameProcessor = new GameProcessor(players);
+
+            matchState = MatchState.Started;
+
+            return gameProcessor;
+        }
+        public void Cancel()
+        {
+            if (matchState != MatchState.Ready)
+                throw new InvalidOperationException("matchState != .Ready");
+
+            matchState = MatchState.Canceled;
         }
     }
 }
