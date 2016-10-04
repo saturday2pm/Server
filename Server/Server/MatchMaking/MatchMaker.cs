@@ -29,24 +29,24 @@ namespace Server.MatchMaking
         {
             while (true)
             {
-                MatchDataInternal match = null;
-                while (match == null)
+                var wasEmpty = true;
+                foreach(var matchData in matchMaker.Poll())
                 {
-                    match = matchMaker.Poll();
+                    wasEmpty = false;
 
-                    // TODO
-                    Thread.Sleep(10);
+                    ThreadPool.QueueUserWorkItem(async _ =>
+                    {
+                        var matchToken = Guid.NewGuid().ToString();
+
+                        await matchResolver.RegisterMatch(matchToken, matchData);
+
+                        foreach (var player in matchData.players)
+                            player.OnMatchCreated(matchToken, matchData);
+                    });
                 }
 
-                ThreadPool.QueueUserWorkItem(async _ =>
-                {
-                    var matchToken = Guid.NewGuid().ToString();
-
-                    await matchResolver.RegisterMatch(matchToken, match);
-                    
-                    foreach (var player in match.players)
-                        player.OnMatchCreated(matchToken, match);
-                });
+                if (wasEmpty)
+                    Thread.Sleep(10);
             }
         }
     }

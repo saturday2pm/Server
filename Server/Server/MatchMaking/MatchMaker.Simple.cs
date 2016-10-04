@@ -11,48 +11,29 @@ namespace Server.MatchMaking
 
     class MatchMakerSimple : IMatchMaker
     {
-        private ConcurrentQueue<MatchMakingService> queue { get; set; }
-        private int targetPlayersForNextMatch { get; set; }
+        IMatchQueue normalQueue { get; set; }
+        IMatchQueue botQueue { get; set; }
 
         public MatchMakerSimple()
         {
-            queue = new ConcurrentQueue<MatchMakingService>();
-
-            ResetTargetPlayerCount();
+            normalQueue = new MatchQueueSimple();
+            botQueue = new MatchQueueSimple();
         }
 
         public void Enqueue(MatchMakingService player)
         {
-            queue.Enqueue(player);
+            normalQueue.Enqueue(player);
         }
 
-        public MatchDataInternal Poll()
+        public IEnumerable<MatchDataInternal> Poll()
         {
-            if (queue.Count < targetPlayersForNextMatch)
-                return null;
+            var matchData = normalQueue.Poll();
+            if (matchData != null)
+                yield return matchData;
 
-            var players = new MatchMakingService[targetPlayersForNextMatch];
-            for(int i = 0; i < players.Length; i++)
-            {
-                if (queue.TryDequeue(out players[i]) == false)
-                    throw new InvalidOperationException("something went wrong");
-
-                // leave players
-            }
-
-            return new MatchDataInternal(players);
-        }
-
-        private void ResetTargetPlayerCount()
-        {
-            if (Constants.ImmediateMatching)
-            {
-                targetPlayersForNextMatch = Constants.MinPlayerForGame;
-                return;
-            }
-
-            targetPlayersForNextMatch = new Random()
-                .Next(Constants.MinPlayerForGame, Constants.MaxPlayerForGame);
+            matchData = botQueue.Poll();
+            if (matchData != null)
+                yield return matchData;
         }
     }
 }

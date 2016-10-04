@@ -10,12 +10,13 @@ namespace Server.MatchMaking
     {
         void Enqueue(MatchMakingService player);
 
-        MatchDataInternal Poll();
+        IEnumerable<MatchDataInternal> Poll();
     }
 
     interface IMatchQueue
     {
-        void Enqueue(int playerId);
+        void Enqueue(MatchMakingService player);
 
+        MatchDataInternal Poll();
     }
 }

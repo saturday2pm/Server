@@ -8,12 +8,19 @@ namespace Server.MatchMaking
 {
     class MatchMakerElo : IMatchMaker
     {
+        IMatchQueue elo_0_500 { get; set; }
+        IMatchQueue elo_501_1000 { get; set; }
+        IMatchQueue elo_1001_1500 { get; set; }
+        IMatchQueue elo_1501_2000 { get; set; }
+        IMatchQueue elo_2001_9999 { get; set; }
+        IMatchQueue botQueue { get; set; }
+
         public void Enqueue(MatchMakingService player)
         {
             throw new NotImplementedException();
         }
 
-        public MatchDataInternal Poll()
+        IEnumerable<MatchDataInternal> IMatchMaker.Poll()
         {
             throw new NotImplementedException();
         }
