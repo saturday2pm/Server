@@ -8,12 +8,10 @@ namespace Server.MatchMaking
 {
     enum QueueType
     {
-        Elo_0_500,
-        Elo_501_1000,
-        Elo_1001_1500,
-        Elo_1501_2000,
-        Elo_2001_9999,
+        Normal,
 
         BotGame,
+
+        Nan2
     }
 }

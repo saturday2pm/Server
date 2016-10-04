@@ -20,9 +20,21 @@ namespace Server.MatchMaking
             botQueue = new MatchQueueSimple();
         }
 
-        public void Enqueue(MatchMakingService player)
+        public void Enqueue(MatchMakingService player, QueueType queueType)
         {
-            normalQueue.Enqueue(player);
+            switch (queueType)
+            {
+                case QueueType.Normal:
+                    normalQueue.Enqueue(player);
+                    break;
+
+                case QueueType.BotGame:
+                    botQueue.Enqueue(player);
+                    break;
+
+                case QueueType.Nan2:
+                    break;
+            }
         }
 
         public IEnumerable<MatchDataInternal> Poll()

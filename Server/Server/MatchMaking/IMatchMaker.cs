@@ -8,7 +8,7 @@ namespace Server.MatchMaking
 {
     interface IMatchMaker
     {
-        void Enqueue(MatchMakingService player);
+        void Enqueue(MatchMakingService player, QueueType queueType);
 
         IEnumerable<MatchDataInternal> Poll();
     }
