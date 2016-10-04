@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+
 using ProtocolCS;
+using ProtocolCS.Constants;
 
 // jwvggwvvg
 namespace Server.AI
@@ -27,6 +29,16 @@ namespace Server.AI
             return player;
         }
 
+
+        public static AutoPlayer Create()
+        {
+            var player = new AutoPlayer();
+            player.currentPlayerId = ReservedPlayerId.Bot;
+            player.ai.Initialize(new Frame[] { });
+
+            return player;
+        }
+
         private AutoPlayer()
         {
             isBotPlayer = true;
@@ -44,6 +56,14 @@ namespace Server.AI
             return ai.Process();
         }
 
+        #region FAKE_SESSION
+        public override bool isAlive
+        {
+            get
+            {
+                return true;
+            }
+        }
         internal override void SendRawPacket(byte[] packet)
         {
             // DoNothing
@@ -53,5 +73,6 @@ namespace Server.AI
             // DoNothing
             // 페이크 세션이기 때문에 실제로 보내면 안됨
         }
+        #endregion
     }
 }

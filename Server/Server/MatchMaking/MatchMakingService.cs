@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 using ProtocolCS;
+using ProtocolCS.Constants;
 
 namespace Server.MatchMaking
 {
@@ -80,7 +81,7 @@ namespace Server.MatchMaking
 
             currentPlayerId = p.senderId;
             matchMaker.Enqueue(p.senderId);
-            matchMaker.Enqueue(-1);
+            matchMaker.Enqueue(ReservedPlayerId.Bot);
 
             clientState = ClientState.QueueJoined;
         }

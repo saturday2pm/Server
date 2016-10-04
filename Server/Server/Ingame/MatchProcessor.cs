@@ -5,8 +5,11 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
+using ProtocolCS.Constants;
+
 namespace Server.Ingame
 {
+    using AI;
     using MatchMaking;
 
     class MatchProcessor
@@ -25,6 +28,16 @@ namespace Server.Ingame
             this.players = new IngameService[match.playerIds.Length];
 
             this.matchState = MatchState.Ready;
+
+            // 시작부터 함께한 봇 유저 처리
+            for (int i=0;i<match.playerIds.Length;i++)
+            {
+                if (match.playerIds[i] != ReservedPlayerId.Bot)
+                    continue;
+
+                players[i] = AutoPlayer.Create();
+                Interlocked.Increment(ref _joinedPlayerCount);
+            }
         }
 
         private int GetIndex(int playerId)

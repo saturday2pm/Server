@@ -30,7 +30,7 @@ namespace Server
             }
         }
 
-        public bool isAlive
+        public virtual bool isAlive
         {
             get
             {

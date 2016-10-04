@@ -45,7 +45,7 @@ namespace Server.Ingame
 
         private BoundTask boundTask { get; set; }
 
-        private HashSet<int> eventArrived { get; set; }
+        private ConcurrentSet<int> eventArrived { get; set; }
         
         private ConcurrentBag<Frame> frameBuffer { get; set; }
 
@@ -64,13 +64,17 @@ namespace Server.Ingame
         }
 
         public void AddEvent(int playerId, IngameEvent ev){
+            if (eventArrived.TryAdd(playerId) == false)
+                throw new InvalidOperationException("already has events");
+
             boundTask.Run(() => eventBuffer.Add(ev));
-            eventArrived.Add(playerId);
         }
         public void AddEvents(int playerId, IEnumerable<IngameEvent> ev)
         {
+            if (eventArrived.TryAdd(playerId) == false)
+                throw new InvalidOperationException("already has events");
+
             boundTask.Run(() => eventBuffer.AddRange(ev));
-            eventArrived.Add(playerId);
         }
         public void ToAutoPlayer(int playerId)
         {

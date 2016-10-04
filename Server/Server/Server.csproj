@@ -57,6 +57,7 @@
     <Compile Include="BroadcastExt.cs" />
     <Compile Include="Concurrency\BoundTask.cs" />
     <Compile Include="Concurrency\BoundTaskPool.cs" />
+    <Compile Include="Concurrency\ConcurrentSet.cs" />
     <Compile Include="Constants\Constants.MatchMaking.cs" />
     <Compile Include="Ingame\GameProcessor.cs" />
     <Compile Include="Ingame\IngameService.cs" />
