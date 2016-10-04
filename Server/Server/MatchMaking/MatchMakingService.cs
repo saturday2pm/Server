@@ -71,6 +71,20 @@ namespace Server.MatchMaking
 
             clientState = ClientState.QueueJoined;
         }
+        public void OnJoinBotQueue(JoinBotQueue p)
+        {
+            Console.WriteLine("JoinBotQueue");
+
+            if (clientState != ClientState.Ready)
+                throw new InvalidOperationException("clientState != .Ready");
+
+            currentPlayerId = p.senderId;
+            matchMaker.Enqueue(p.senderId);
+            matchMaker.Enqueue(-1);
+
+            clientState = ClientState.QueueJoined;
+        }
+
         public void OnLeaveQueue(LeaveQueue p)
         {
             Console.WriteLine("LeaveQueue");
