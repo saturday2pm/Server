@@ -44,6 +44,10 @@ namespace Server.AI
             return ai.Process();
         }
 
+        internal override void SendRawPacket(byte[] packet)
+        {
+            // DoNothing
+        }
         protected override void SendPacket(PacketBase packet)
         {
             // DoNothing

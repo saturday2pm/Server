@@ -42,15 +42,17 @@ namespace Server.Ingame
                             .Select(x => x.AsPlayer()).ToArray(),
                         seed = 0
                     };
-                    foreach(var player in matchProcessor.players)
-                    {
-                        player.SendPacket(packet);
-                    }
 
+                    matchProcessor.players.Broadcast(packet);
+                    
                     matchProcessor.matchState = MatchState.Started;
                 }
                 else
                 {
+                    var packet = new CancelGame()
+                    {
+                    };
+                    matchProcessor.players.Broadcast(packet);
 
                     matchProcessor.matchState = MatchState.Canceled;
                 }

@@ -83,13 +83,24 @@ namespace Server
             Sessions.CloseSession(this.ID, code, reason);
         }
 
+        internal virtual void SendRawPacket(byte[] packet)
+        {
+            try
+            {
+                Send(packet);
+            }
+            catch(Exception e)
+            {
+                Console.WriteLine(e);
+            }
+        }
         protected virtual void SendPacket(PacketBase packet)
         {
             try
             {
                 var json = Serializer.ToJson(packet);
 
-                Send(json);
+                SendRawPacket(Encoding.UTF8.GetBytes(json));
             }
             catch (Exception e)
             {

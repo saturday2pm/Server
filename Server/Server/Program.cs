@@ -33,6 +33,9 @@ namespace Server
                     server.AddWebSocketService<IngameService>(IngameService.Path);
             }
         }
+        static void ProcessCmdOptions(string[] args)
+        {
+        }
 
         static void Shutdown()
         {
@@ -43,7 +46,7 @@ namespace Server
 
         static void Main(string[] args)
         {
-            server = new WebSocketServer()
+            server = new WebSocketServer(9916)
             {
                 ReuseAddress = true,
                 KeepClean = true
@@ -59,6 +62,7 @@ namespace Server
             }
 
             BootstrapServices(args);
+            ProcessCmdOptions(args);
             
             server.Start();
 
