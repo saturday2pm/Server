@@ -15,10 +15,9 @@ namespace Server
             PacketBase packet)
         {
             var json = Serializer.ToJson(packet);
-            var rawBytes = Encoding.UTF8.GetBytes(json);
-
+            
             foreach(var session in sessions)
-                session.SendRawPacket(rawBytes);
+                session.SendRawPacket(json);
         }
     }
 }

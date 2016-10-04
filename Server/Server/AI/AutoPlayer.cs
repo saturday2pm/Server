@@ -64,7 +64,7 @@ namespace Server.AI
                 return true;
             }
         }
-        internal override void SendRawPacket(byte[] packet)
+        internal override void SendRawPacket(string packet)
         {
             // DoNothing
         }

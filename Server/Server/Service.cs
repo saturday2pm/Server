@@ -83,7 +83,7 @@ namespace Server
             Sessions.CloseSession(this.ID, code, reason);
         }
 
-        internal virtual void SendRawPacket(byte[] packet)
+        internal virtual void SendRawPacket(string packet)
         {
             try
             {
@@ -100,7 +100,7 @@ namespace Server
             {
                 var json = Serializer.ToJson(packet);
 
-                SendRawPacket(Encoding.UTF8.GetBytes(json));
+                SendRawPacket(json);
             }
             catch (Exception e)
             {
@@ -125,6 +125,11 @@ namespace Server
                 ErrorClose(CloseStatusCode.ProtocolError, "serverVersion != clientVersion");
                 return;
             }
+        }
+        protected override void OnClose(CloseEventArgs e)
+        {
+            T trash;
+            sessions.TryRemove(currentPlayerId, out trash);
         }
         protected override void OnMessage(MessageEventArgs e)
         {

@@ -8,12 +8,12 @@ namespace Server.MatchMaking
 {
     class MatchMakerElo : IMatchMaker
     {
-        public void Enqueue(int playerId)
+        public void Enqueue(MatchMakingService player)
         {
             throw new NotImplementedException();
         }
 
-        public Match Poll()
+        public MatchDataInternal Poll()
         {
             throw new NotImplementedException();
         }

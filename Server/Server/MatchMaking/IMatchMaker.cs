@@ -8,9 +8,9 @@ namespace Server.MatchMaking
 {
     interface IMatchMaker
     {
-        void Enqueue(int playerId);
+        void Enqueue(MatchMakingService player);
 
-        Match Poll();
+        MatchDataInternal Poll();
     }
 
     interface IMatchQueue

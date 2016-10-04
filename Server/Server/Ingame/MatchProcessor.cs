@@ -14,7 +14,7 @@ namespace Server.Ingame
 
     class MatchProcessor
     {
-        public Match match { get; private set; }
+        public MatchData match { get; private set; }
 
         public IngameService[] players { get; private set; }
         private int _joinedPlayerCount;
@@ -22,7 +22,7 @@ namespace Server.Ingame
 
         public MatchState matchState { get; set; }
 
-        public MatchProcessor(Match match)
+        public MatchProcessor(MatchData match)
         {
             this.match = match;
             this.players = new IngameService[match.playerIds.Length];

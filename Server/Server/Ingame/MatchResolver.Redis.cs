@@ -9,12 +9,12 @@ namespace Server.Ingame
 {
     class MatchResolverRedis : IMatchResolver
     {
-        public Task<Match> GetMatchInfo(string matchToken)
+        public Task<MatchData> GetMatchInfo(string matchToken)
         {
             throw new NotImplementedException();
         }
 
-        public Task RegisterMatch(string matchToken, Match match)
+        public Task RegisterMatch(string matchToken, MatchData match)
         {
             throw new NotImplementedException();
         }

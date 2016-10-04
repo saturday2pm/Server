@@ -72,7 +72,7 @@
     <Compile Include="MatchMaking\ClientState.cs" />
     <Compile Include="MatchMaking\Elo.cs" />
     <Compile Include="MatchMaking\IMatchMaker.cs" />
-    <Compile Include="MatchMaking\Match.cs" />
+    <Compile Include="MatchMaking\MatchData.cs" />
     <Compile Include="MatchMaking\MatchMaker.cs" />
     <Compile Include="MatchMaking\MatchMaker.Elo.cs" />
     <Compile Include="MatchMaking\MatchMaker.Simple.cs" />

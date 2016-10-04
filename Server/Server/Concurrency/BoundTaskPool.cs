@@ -19,10 +19,10 @@ namespace Server.Concurrency
             taskQueue = new BlockingCollection<Task>[MaxPoolSize];
             for (int i = 0; i < taskQueue.Length; i++)
             {
-                taskQueue[i] = new BlockingCollection<Task>();
+                var localQueue = taskQueue[i] = new BlockingCollection<Task>();
 
                 var thread = new Thread(() => {
-                    PoolThread(taskQueue[i]);
+                    PoolThread(localQueue);
                 });
                 thread.Start();
             }

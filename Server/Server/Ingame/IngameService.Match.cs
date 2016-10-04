@@ -9,7 +9,7 @@ using ProtocolCS;
 
 namespace Server.Ingame
 {
-    public partial class IngameService : Service<IngameService>
+    partial class IngameService : Service<IngameService>
     {
         private static IMatchResolver matchResolver { get; set; }
         private static ConcurrentDictionary<string, MatchProcessor> activeMatches { get; set; }

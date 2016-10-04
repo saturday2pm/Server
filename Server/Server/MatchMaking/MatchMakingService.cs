@@ -11,21 +11,17 @@ namespace Server.MatchMaking
 {
     using Ingame;
 
-    public sealed class MatchMakingService : Service<MatchMakingService>
+    sealed class MatchMakingService : Service<MatchMakingService>
     {
         public static readonly string Path = "/mmaker";
 
         private static IMatchMaker matchMaker { get; set; }
-        private static IMatchResolver matchResolver { get; set; }
 
         private ClientState clientState { get; set; }
 
         static MatchMakingService()
         {
             matchMaker = MatchMaker.Create<MatchMakerSimple>();
-            matchResolver = MatchResolver.Create<MatchResolverSimple>();
-
-            MatchMaker.onMatchCreated += OnMatchCreated;
         }
 
         public MatchMakingService()
@@ -37,27 +33,17 @@ namespace Server.MatchMaking
         /// 매치가 생성되면 자동으로 실행되는 콜백
         /// </summary>
         /// <param name="match">생성된 매치</param>
-        private async static void OnMatchCreated(Match match)
+        public void OnMatchCreated(string matchToken, MatchData match)
         {
-            Console.WriteLine("OnMatchCreated");
-
-            var matchToken = Guid.NewGuid().ToString();
             var packet = new MatchSuccess()
             {
                 gameServerAddress = "ws://localhost/game",
                 matchToken = matchToken
             };
+            
+            SendPacket(packet);
 
-            Console.WriteLine($"MatchToken : {matchToken}");
-
-            await matchResolver.RegisterMatch(matchToken, match);
-
-            var players = match.playerIds.Select(x => GetSessionById(x));
-            foreach (var player in players)
-            {
-                player.clientState = ClientState.MatchCreated;
-                player.SendPacket(packet);
-            }
+            clientState = ClientState.MatchCreated;
         }
 
         public void OnJoinQueue(JoinQueue p)
@@ -68,7 +54,7 @@ namespace Server.MatchMaking
                 throw new InvalidOperationException("clientState != .Ready");
 
             currentPlayerId = p.senderId;
-            matchMaker.Enqueue(p.senderId);
+            matchMaker.Enqueue(this);
 
             clientState = ClientState.QueueJoined;
         }
@@ -80,8 +66,8 @@ namespace Server.MatchMaking
                 throw new InvalidOperationException("clientState != .Ready");
 
             currentPlayerId = p.senderId;
-            matchMaker.Enqueue(p.senderId);
-            matchMaker.Enqueue(ReservedPlayerId.Bot);
+            matchMaker.Enqueue(this);
+            //matchMaker.Enqueue(ReservedPlayerId.Bot);
 
             clientState = ClientState.QueueJoined;
         }

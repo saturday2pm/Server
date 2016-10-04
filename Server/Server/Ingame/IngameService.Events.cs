@@ -8,7 +8,7 @@ using ProtocolCS;
 
 namespace Server.Ingame
 {
-    public partial class IngameService : Service<IngameService>
+    partial class IngameService : Service<IngameService>
     {
         internal GameProcessor gameProcessor { get; set; }
 
