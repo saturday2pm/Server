@@ -14,3 +14,12 @@ ws://riniblog.egloos.com/game?version=1.0.0
 
 서버 종류
 ----
+
+유저 아이디
+----
+비로그인 기반 인증으로, 클라이언트가 보낸 유저아이디를 무조건 신뢰함<br>
+클라이언트는 자기 시스템에 고유한 아이디를 유저 아이디로 사용한다.
+```
+var playerId = SystemInfo.deviceUniqueIdentifier.GetHashCode();
+```
+추후에 패북 로그인같은걸 붓이면 얘가 이상한 유저 아이디인지 진짜인지 검증 가능함
