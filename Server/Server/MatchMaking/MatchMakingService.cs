@@ -67,7 +67,6 @@ namespace Server.MatchMaking
 
             currentPlayerId = p.senderId;
             matchMaker.Enqueue(this);
-            //matchMaker.Enqueue(ReservedPlayerId.Bot);
 
             clientState = ClientState.QueueJoined;
         }
