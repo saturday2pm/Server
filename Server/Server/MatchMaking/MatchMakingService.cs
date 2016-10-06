@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 using ProtocolCS;
@@ -10,18 +11,27 @@ using ProtocolCS.Constants;
 namespace Server.MatchMaking
 {
     using Ingame;
+    using LoadBalancing;
 
     sealed class MatchMakingService : Service<MatchMakingService>
     {
         public static readonly string Path = "/mmaker";
 
+        private static ILoadBalancer loadBalancer { get; set; }
         private static IMatchMaker matchMaker { get; set; }
 
         private ClientState clientState { get; set; }
 
         static MatchMakingService()
         {
+            loadBalancer = new LoadBalancerFixedRound();
             matchMaker = MatchMaker.Create<MatchMakerSimple>();
+
+            /* TODO
+             */
+            loadBalancer.Initialize(new string[] {
+                "ws://localhost/game"
+            });
         }
 
         public MatchMakingService()
@@ -37,7 +47,7 @@ namespace Server.MatchMaking
         {
             var packet = new MatchSuccess()
             {
-                gameServerAddress = "ws://localhost/game",
+                gameServerAddress = loadBalancer.GetNext(),
                 matchToken = matchToken
             };
             
