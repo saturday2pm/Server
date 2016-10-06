@@ -67,6 +67,7 @@ namespace Server
         /// <exception cref="KeyNotFoundException">
         /// 주어진 playerId로 찾을 수 없을 때
         /// </exception>
+        [ThreadSafe]
         protected static T GetSessionById(int playerId)
         {
             return sessions[playerId];

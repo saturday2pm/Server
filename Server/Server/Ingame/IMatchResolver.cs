@@ -8,8 +8,10 @@ namespace Server.Ingame
 {
     interface IMatchResolver
     {
+        [ThreadSafe]
         Task RegisterMatch(string matchToken, MatchMaking.MatchData match);
 
+        [ThreadSafe]
         Task<MatchMaking.MatchData> GetMatchInfo(string matchToken);
     }
 }
