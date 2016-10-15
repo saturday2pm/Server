@@ -30,7 +30,7 @@ namespace Server.MatchMaking
             /* TODO
              */
             loadBalancer.Initialize(new string[] {
-                "ws://localhost/game"
+                "ws://localhost:9916/game"
             });
         }
 
