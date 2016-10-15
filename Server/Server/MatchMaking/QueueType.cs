@@ -6,8 +6,12 @@ using System.Threading.Tasks;
 
 namespace Server.MatchMaking
 {
-    class Match
+    enum QueueType
     {
-        public int[] playerIds { get; set; }
+        Normal,
+
+        BotGame,
+
+        Nan2
     }
 }

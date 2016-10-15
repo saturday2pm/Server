@@ -9,7 +9,7 @@ using WebSocketSharp;
 
 namespace Server.Ingame
 {
-    public partial class IngameService : Service<IngameService>
+    partial class IngameService : Service<IngameService>
     {
         public static readonly string Path = "/game";
 

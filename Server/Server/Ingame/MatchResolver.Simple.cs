@@ -10,21 +10,21 @@ namespace Server.Ingame
 {
     class MatchResolverSimple : IMatchResolver
     {
-        private static ConcurrentDictionary<string, MatchMaking.Match> matches { get; set; }
+        private static ConcurrentDictionary<string, MatchMaking.MatchData> matches { get; set; }
 
         static MatchResolverSimple()
         {
-            matches = new ConcurrentDictionary<string, Match>();
+            matches = new ConcurrentDictionary<string, MatchData>();
         }
         
-        public Task<Match> GetMatchInfo(string matchToken)
+        public Task<MatchData> GetMatchInfo(string matchToken)
         {
             Console.WriteLine("MatchResolverSimple::GetMatchInfo : " + matchToken);
 
-            return Task.FromResult<Match>(matches[matchToken]);
+            return Task.FromResult<MatchData>(matches[matchToken]);
         }
 
-        public Task RegisterMatch(string matchToken, Match match)
+        public Task RegisterMatch(string matchToken, MatchData match)
         {
             Console.WriteLine("MatchResolverSimple::RegisterMatch : " + matchToken);
 

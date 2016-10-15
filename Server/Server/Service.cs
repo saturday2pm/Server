@@ -30,7 +30,7 @@ namespace Server
             }
         }
 
-        public bool isAlive
+        public virtual bool isAlive
         {
             get
             {
@@ -67,6 +67,7 @@ namespace Server
         /// <exception cref="KeyNotFoundException">
         /// 주어진 playerId로 찾을 수 없을 때
         /// </exception>
+        [ThreadSafe]
         protected static T GetSessionById(int playerId)
         {
             return sessions[playerId];
@@ -83,13 +84,24 @@ namespace Server
             Sessions.CloseSession(this.ID, code, reason);
         }
 
-        protected virtual void SendPacket(PacketBase packet)
+        internal virtual void SendRawPacket(string packet)
+        {
+            try
+            {
+                Send(packet);
+            }
+            catch(Exception e)
+            {
+                Console.WriteLine(e);
+            }
+        }
+        internal virtual void SendPacket(PacketBase packet)
         {
             try
             {
                 var json = Serializer.ToJson(packet);
 
-                Send(json);
+                SendRawPacket(json);
             }
             catch (Exception e)
             {
@@ -114,6 +126,11 @@ namespace Server
                 ErrorClose(CloseStatusCode.ProtocolError, "serverVersion != clientVersion");
                 return;
             }
+        }
+        protected override void OnClose(CloseEventArgs e)
+        {
+            T trash;
+            sessions.TryRemove(currentPlayerId, out trash);
         }
         protected override void OnMessage(MessageEventArgs e)
         {

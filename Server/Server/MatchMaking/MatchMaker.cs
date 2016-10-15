@@ -7,40 +7,46 @@ using System.Threading.Tasks;
 
 namespace Server.MatchMaking
 {
+    using Ingame;
+
     class MatchMaker
     {
-        public static Action<Match> onMatchCreated { get; set; }
-
         public static IMatchMaker Create<T>()
             where T : IMatchMaker, new()
         {
             var matchMaker = new T();
+            var matchResolver = new MatchResolverSimple();
 
             var thread = new Thread(() => {
-                MatchMakerThread(matchMaker);
+                MatchMakerThread(matchMaker, matchResolver);
             });
             thread.Start();
 
             return matchMaker;
         }
 
-        private static void MatchMakerThread(IMatchMaker matchMaker)
+        private static void MatchMakerThread(IMatchMaker matchMaker, IMatchResolver matchResolver)
         {
             while (true)
             {
-                Match match = null;
-                while (match == null)
+                var wasEmpty = true;
+                foreach(var matchData in matchMaker.Poll())
                 {
-                    match = matchMaker.Poll();
+                    wasEmpty = false;
 
-                    // TODO
-                    Thread.Sleep(10);
+                    ThreadPool.QueueUserWorkItem(async _ =>
+                    {
+                        var matchToken = Guid.NewGuid().ToString();
+
+                        await matchResolver.RegisterMatch(matchToken, matchData);
+
+                        foreach (var player in matchData.players)
+                            player.OnMatchCreated(matchToken, matchData);
+                    });
                 }
 
-                ThreadPool.QueueUserWorkItem(_ =>
-                {
-                    onMatchCreated?.Invoke(match);
-                });
+                if (wasEmpty)
+                    Thread.Sleep(10);
             }
         }
     }

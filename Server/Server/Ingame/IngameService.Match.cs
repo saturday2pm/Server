@@ -9,7 +9,7 @@ using ProtocolCS;
 
 namespace Server.Ingame
 {
-    public partial class IngameService : Service<IngameService>
+    partial class IngameService : Service<IngameService>
     {
         private static IMatchResolver matchResolver { get; set; }
         private static ConcurrentDictionary<string, MatchProcessor> activeMatches { get; set; }
@@ -36,27 +36,38 @@ namespace Server.Ingame
             if (matchProcessor.Join(this))
             {
                 if (matchProcessor.CanStartGame())
-                {
-                    var packet = new StartGame()
-                    {
-                        players = matchProcessor.players
-                            .Select(x => x.AsPlayer()).ToArray(),
-                        seed = 0
-                    };
-                    foreach(var player in matchProcessor.players)
-                    {
-                        player.SendPacket(packet);
-                        player.InitializeGame(gameProcessor);
-                    }
-
-                    matchProcessor.matchState = MatchState.Started;
-                }
+                    PrepareGame(matchProcessor);
                 else
-                {
-
-                    matchProcessor.matchState = MatchState.Canceled;
-                }
+                    CancelGame(matchProcessor);
             }
+        }
+
+        private static void PrepareGame(MatchProcessor matchProcessor)
+        {
+            var packet = new StartGame()
+            {
+                players = matchProcessor.players
+                            .Select(x => x.AsPlayer()).ToArray(),
+                seed = 0
+            };
+
+            matchProcessor.players.Broadcast(packet);
+
+            var gameProcesssor = matchProcessor.Start();
+            foreach (var player in matchProcessor.players)
+            {
+                player.InitializeGame(gameProcesssor);
+            }
+        }
+
+        private static void CancelGame(MatchProcessor matchProcessor)
+        {
+            var packet = new CancelGame()
+            {
+            };
+            matchProcessor.players.Broadcast(packet);
+
+            matchProcessor.Cancel();
         }
     }
 }

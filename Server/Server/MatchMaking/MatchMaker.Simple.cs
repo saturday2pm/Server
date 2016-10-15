@@ -11,49 +11,41 @@ namespace Server.MatchMaking
 
     class MatchMakerSimple : IMatchMaker
     {
-        private ConcurrentQueue<int> queue { get; set; }
-        private int targetPlayersForNextMatch { get; set; }
+        IMatchQueue normalQueue { get; set; }
+        IMatchQueue botQueue { get; set; }
 
         public MatchMakerSimple()
         {
-            queue = new ConcurrentQueue<int>();
-
-            ResetTargetPlayerCount();
+            normalQueue = new MatchQueueSimple();
+            botQueue = new MatchQueueSimple();
         }
 
-        public void Enqueue(int playerId)
+        public void Enqueue(MatchMakingService player, QueueType queueType)
         {
-            queue.Enqueue(playerId);
-        }
-
-        public Match Poll()
-        {
-            if (queue.Count < targetPlayersForNextMatch)
-                return null;
-
-            int[] players = new int[targetPlayersForNextMatch];
-            for(int i = 0; i < players.Length; i++)
+            switch (queueType)
             {
-                if (queue.TryDequeue(out players[i]) == false)
-                    throw new InvalidOperationException("something went wrong");
+                case QueueType.Normal:
+                    normalQueue.Enqueue(player);
+                    break;
+
+                case QueueType.BotGame:
+                    botQueue.Enqueue(player);
+                    break;
+
+                case QueueType.Nan2:
+                    break;
             }
-
-            return new Match()
-            {
-                playerIds = players
-            };
         }
 
-        private void ResetTargetPlayerCount()
+        public IEnumerable<MatchDataInternal> Poll()
         {
-            if (Constants.ImmediateMatching)
-            {
-                targetPlayersForNextMatch = Constants.MinPlayerForGame;
-                return;
-            }
+            var matchData = normalQueue.Poll();
+            if (matchData != null)
+                yield return matchData;
 
-            targetPlayersForNextMatch = new Random()
-                .Next(Constants.MinPlayerForGame, Constants.MaxPlayerForGame);
+            matchData = botQueue.Poll();
+            if (matchData != null)
+                yield return matchData;
         }
     }
 }

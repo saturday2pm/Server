@@ -2,29 +2,36 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 using ProtocolCS;
+using ProtocolCS.Constants;
 
 namespace Server.MatchMaking
 {
     using Ingame;
+    using LoadBalancing;
 
-    public sealed class MatchMakingService : Service<MatchMakingService>
+    sealed class MatchMakingService : Service<MatchMakingService>
     {
         public static readonly string Path = "/mmaker";
 
+        private static ILoadBalancer loadBalancer { get; set; }
         private static IMatchMaker matchMaker { get; set; }
-        private static IMatchResolver matchResolver { get; set; }
 
         private ClientState clientState { get; set; }
 
         static MatchMakingService()
         {
+            loadBalancer = new LoadBalancerFixedRound();
             matchMaker = MatchMaker.Create<MatchMakerSimple>();
-            matchResolver = MatchResolver.Create<MatchResolverSimple>();
 
-            MatchMaker.onMatchCreated += OnMatchCreated;
+            /* TODO
+             */
+            loadBalancer.Initialize(new string[] {
+                "ws://localhost/game"
+            });
         }
 
         public MatchMakingService()
@@ -36,27 +43,17 @@ namespace Server.MatchMaking
         /// 매치가 생성되면 자동으로 실행되는 콜백
         /// </summary>
         /// <param name="match">생성된 매치</param>
-        private async static void OnMatchCreated(Match match)
+        public void OnMatchCreated(string matchToken, MatchData match)
         {
-            Console.WriteLine("OnMatchCreated");
-
-            var matchToken = Guid.NewGuid().ToString();
             var packet = new MatchSuccess()
             {
-                gameServerAddress = "ws://localhost/game",
+                gameServerAddress = loadBalancer.GetNext(),
                 matchToken = matchToken
             };
+            
+            SendPacket(packet);
 
-            Console.WriteLine($"MatchToken : {matchToken}");
-
-            await matchResolver.RegisterMatch(matchToken, match);
-
-            var players = match.playerIds.Select(x => GetSessionById(x));
-            foreach (var player in players)
-            {
-                player.clientState = ClientState.MatchCreated;
-                player.SendPacket(packet);
-            }
+            clientState = ClientState.MatchCreated;
         }
 
         public void OnJoinQueue(JoinQueue p)
@@ -67,10 +64,23 @@ namespace Server.MatchMaking
                 throw new InvalidOperationException("clientState != .Ready");
 
             currentPlayerId = p.senderId;
-            matchMaker.Enqueue(p.senderId);
+            matchMaker.Enqueue(this, QueueType.Normal);
 
             clientState = ClientState.QueueJoined;
         }
+        public void OnJoinBotQueue(JoinBotQueue p)
+        {
+            Console.WriteLine("JoinBotQueue");
+
+            if (clientState != ClientState.Ready)
+                throw new InvalidOperationException("clientState != .Ready");
+
+            currentPlayerId = p.senderId;
+            matchMaker.Enqueue(this, QueueType.BotGame);
+
+            clientState = ClientState.QueueJoined;
+        }
+
         public void OnLeaveQueue(LeaveQueue p)
         {
             Console.WriteLine("LeaveQueue");
