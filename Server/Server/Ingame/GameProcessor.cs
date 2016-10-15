@@ -23,16 +23,6 @@ namespace Server.Ingame
         public IngameService[] players { get; private set; }
 
         /// <summary>
-        /// 모든 플레이어로부터 Frame패킷이 도착했는지 조사한다.
-        /// </summary>
-        public bool canAggregate
-        {
-            get
-            {
-                return (players.Length - botPlayerCount) == eventArrived.Count;
-            }
-        }
-        /// <summary>
         /// 플레이어 다나가고, 봇만 남아있는 좀비방인지
         /// </summary>
         public bool isZombieGame
@@ -44,9 +34,8 @@ namespace Server.Ingame
         }
 
         private BoundTask boundTask { get; set; }
-
         private ConcurrentSet<int> eventArrived { get; set; }
-        
+        private int eventArrivedCount;
         private ConcurrentBag<Frame> frameBuffer { get; set; }
 
         private int botPlayerCount;
@@ -54,7 +43,8 @@ namespace Server.Ingame
         public GameProcessor(IngameService[] players)
         {
             this.players = players;
-            
+
+            this.eventArrived = new ConcurrentSet<int>();
             this.eventBuffer = new List<IngameEvent>();
             this.boundTask = new BoundTask();
             this.frameBuffer = new ConcurrentBag<Frame>();
@@ -63,18 +53,32 @@ namespace Server.Ingame
             this.seed = 0;
         }
 
-        public void AddEvent(int playerId, IngameEvent ev){
+        public bool AddEvent(int playerId, IngameEvent ev){
+            Console.WriteLine("ADdEvent : " + playerId.ToString());
+
+            bool lastPlayer = Interlocked.Increment(ref eventArrivedCount) == players.Length - botPlayerCount;
             if (eventArrived.TryAdd(playerId) == false)
                 throw new InvalidOperationException("already has events");
 
             boundTask.Run(() => eventBuffer.Add(ev));
+
+            if (lastPlayer)
+                return true;
+            return false;
         }
-        public void AddEvents(int playerId, IEnumerable<IngameEvent> ev)
+        public bool AddEvents(int playerId, IEnumerable<IngameEvent> ev)
         {
+            Console.WriteLine("ADdEvent : " + playerId.ToString());
+
+            bool lastPlayer = Interlocked.Increment(ref eventArrivedCount) == players.Length - botPlayerCount;
             if (eventArrived.TryAdd(playerId) == false)
                 throw new InvalidOperationException("already has events");
-
+            
             boundTask.Run(() => eventBuffer.AddRange(ev));
+
+            if (lastPlayer)
+                return true;
+            return false;
         }
         public void ToAutoPlayer(int playerId)
         {
@@ -100,7 +104,10 @@ namespace Server.Ingame
                 events = eventBuffer.ToArray()
             });
             eventArrived.Clear();
+            Interlocked.Exchange(ref eventArrivedCount, 0);
             currentFrameNo++;
+
+            Console.WriteLine("Clear Arrived");
 
             return boundTask.Run(() => {
                 foreach(var player in players)

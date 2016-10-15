@@ -18,7 +18,7 @@ namespace Server.Ingame
         /// <param name="gameProcessor">게임 프로세서</param>
         private void InitializeGame(GameProcessor gameProcessor)
         {
-            if (gameProcessor != null)
+            if (this.gameProcessor != null)
                 throw new InvalidOperationException($"already has {gameProcessor}");
 
             this.gameProcessor = gameProcessor;
@@ -33,8 +33,7 @@ namespace Server.Ingame
             if (p.frameNo > gameProcessor.currentFrameNo)
                 throw new ArgumentOutOfRangeException("p.frameNo > currentFrameNo");
 
-            gameProcessor.AddEvents(currentPlayerId, p.events);
-            if (gameProcessor.canAggregate)
+            if (gameProcessor.AddEvents(currentPlayerId, p.events))
             {
                 // 이번 프레임 브로드캐스팅
                 var frameNo = gameProcessor.currentFrameNo;
