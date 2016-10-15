@@ -7,6 +7,7 @@ using System.Threading;
 using System.Threading.Tasks;
 
 using ProtocolCS;
+using ProtocolCS.Constants;
 
 namespace Server.Ingame
 {
@@ -38,6 +39,8 @@ namespace Server.Ingame
         private int eventArrivedCount;
         private ConcurrentBag<Frame> frameBuffer { get; set; }
 
+        private int lastFrameTick;
+
         private int botPlayerCount;
 
         public GameProcessor(IngameService[] players)
@@ -51,11 +54,11 @@ namespace Server.Ingame
 
             this.currentFrameNo = 0;
             this.seed = 0;
+
+            this.lastFrameTick = Environment.TickCount;
         }
 
         public bool AddEvent(int playerId, IngameEvent ev){
-            Console.WriteLine("ADdEvent : " + playerId.ToString());
-
             bool lastPlayer = Interlocked.Increment(ref eventArrivedCount) == players.Length - botPlayerCount;
             if (eventArrived.TryAdd(playerId) == false)
                 throw new InvalidOperationException("already has events");
@@ -68,8 +71,6 @@ namespace Server.Ingame
         }
         public bool AddEvents(int playerId, IEnumerable<IngameEvent> ev)
         {
-            Console.WriteLine("ADdEvent : " + playerId.ToString());
-
             bool lastPlayer = Interlocked.Increment(ref eventArrivedCount) == players.Length - botPlayerCount;
             if (eventArrived.TryAdd(playerId) == false)
                 throw new InvalidOperationException("already has events");
@@ -96,7 +97,7 @@ namespace Server.Ingame
         /// 현재 프레임을 끝내고, 다음 프레임을 준비한다.
         /// </summary>
         /// <returns>이번 프레임에서 발행한 이벤트들</returns>
-        public Task<IngameEvent[]> Step()
+        public async Task<IngameEvent[]> Step()
         {
             frameBuffer.Add(new Frame()
             {
@@ -107,9 +108,12 @@ namespace Server.Ingame
             Interlocked.Exchange(ref eventArrivedCount, 0);
             currentFrameNo++;
 
-            Console.WriteLine("Clear Arrived");
+            var delay = FrameRate.Interval - (Environment.TickCount - lastFrameTick);
+            if (delay > 0)
+                await Task.Delay(delay);
+            lastFrameTick = Environment.TickCount;
 
-            return boundTask.Run(() => {
+            return await boundTask.Run(() => {
                 foreach(var player in players)
                 {
                     if (player.isBotPlayer)
