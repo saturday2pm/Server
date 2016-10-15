@@ -12,6 +12,18 @@ namespace Server.Ingame
     {
         internal GameProcessor gameProcessor { get; set; }
 
+        /// <summary>
+        /// StartGame이 완료되고 게임이 시작되기 전에 호출되는 메소드
+        /// </summary>
+        /// <param name="gameProcessor">게임 프로세서</param>
+        private void InitializeGame(GameProcessor gameProcessor)
+        {
+            if (gameProcessor != null)
+                throw new InvalidOperationException($"already has {gameProcessor}");
+
+            this.gameProcessor = gameProcessor;
+        }
+
         public async void OnFrame(Frame p)
         {
             Console.WriteLine("OnFrame");

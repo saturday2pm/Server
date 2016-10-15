@@ -26,6 +26,7 @@ namespace Server.Ingame
 
             var match = await matchResolver.GetMatchInfo(p.matchToken);
             var matchProcessor = new MatchProcessor(match);
+            var gameProcessor = new GameProcessor(matchProcessor.players);
 
             // 첫번째 입장자가 아니면, 이미 만들어진값 가져옴
             if (activeMatches.TryAdd(p.matchToken, matchProcessor) == false)
@@ -45,6 +46,7 @@ namespace Server.Ingame
                     foreach(var player in matchProcessor.players)
                     {
                         player.SendPacket(packet);
+                        player.InitializeGame(gameProcessor);
                     }
 
                     matchProcessor.matchState = MatchState.Started;
