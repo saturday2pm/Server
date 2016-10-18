@@ -68,6 +68,11 @@
     <Compile Include="Concurrency\ConcurrentSet.cs" />
     <Compile Include="Concurrency\TSAnnotations.cs" />
     <Compile Include="Constants\Constants.MatchMaking.cs" />
+    <Compile Include="Env\EnvEC2.cs" />
+    <Compile Include="Env\EnvLocal.cs" />
+    <Compile Include="Env\EnvLocalWithoutDB.cs" />
+    <Compile Include="Env\IEnv.cs" />
+    <Compile Include="Env\ServerEnv.cs" />
     <Compile Include="Ingame\GameProcessor.cs" />
     <Compile Include="Ingame\IngameService.cs" />
     <Compile Include="Ingame\IngameService.Events.cs" />

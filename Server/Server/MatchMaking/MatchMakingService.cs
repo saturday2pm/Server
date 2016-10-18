@@ -10,6 +10,7 @@ using ProtocolCS.Constants;
 
 namespace Server.MatchMaking
 {
+    using Env;
     using Ingame;
     using LoadBalancing;
 
@@ -27,10 +28,10 @@ namespace Server.MatchMaking
             loadBalancer = new LoadBalancerFixedRound();
             matchMaker = MatchMaker.Create<MatchMakerSimple>();
 
-            /* TODO
-             */
+            // TODO : 로드밸런싱도 env가 가져감
+            var ev = ServerEnv.selectedEnv;
             loadBalancer.Initialize(new string[] {
-                "ws://localhost:9916/game"
+                $"ws://{ev.publicAddress}:{ev.port}/game"
             });
         }
 

@@ -13,6 +13,7 @@ using ProtocolCS;
 
 namespace Server
 {
+    using Env;
     using MatchMaking;
     using Ingame;
      
@@ -46,7 +47,9 @@ namespace Server
 
         static void Main(string[] args)
         {
-            server = new WebSocketServer(9916)
+            var ev = ServerEnv.selectedEnv;
+
+            server = new WebSocketServer(ev.port)
             {
                 ReuseAddress = true,
                 KeepClean = true
