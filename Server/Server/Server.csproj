@@ -62,6 +62,8 @@
     <Compile Include="AI\AutoPlayer.cs" />
     <Compile Include="AI\DummyAi.cs" />
     <Compile Include="AI\IAi.cs" />
+    <Compile Include="Auth\IDP\Facebook.cs" />
+    <Compile Include="Auth\IDP\IDProvider.cs" />
     <Compile Include="BroadcastExt.cs" />
     <Compile Include="Concurrency\BoundTask.cs" />
     <Compile Include="Concurrency\BoundTaskPool.cs" />
