@@ -42,6 +42,11 @@ namespace Server.Ingame
             }
         }
 
+        /// <summary>
+        /// 매치 프로세서가 할 일을 모두 마치고, 실제 게임 가능한 상태를 준비한다.
+        /// 매치에 속한 플레어에게 시작 알림을 보낸다.
+        /// </summary>
+        /// <param name="matchProcessor"></param>
         private static void PrepareGame(MatchProcessor matchProcessor)
         {
             var packet = new StartGame()
@@ -60,6 +65,10 @@ namespace Server.Ingame
             }
         }
 
+        /// <summary>
+        /// 매치에 속한 플레이어에게 취소 알림을 보낸다.
+        /// </summary>
+        /// <param name="matchProcessor"></param>
         private static void CancelGame(MatchProcessor matchProcessor)
         {
             var packet = new CancelGame()

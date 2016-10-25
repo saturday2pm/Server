@@ -42,5 +42,11 @@ namespace Server.Concurrency
         {
             dic.Clear();
         }
+
+        public IEnumerator<T> GetEnumerator()
+        {
+            foreach (var pair in dic)
+                yield return pair.Key;
+        }
     }
 }

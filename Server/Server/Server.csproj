@@ -73,6 +73,7 @@
     <Compile Include="Env\EnvLocalWithoutDB.cs" />
     <Compile Include="Env\IEnv.cs" />
     <Compile Include="Env\ServerEnv.cs" />
+    <Compile Include="ICheckable.cs" />
     <Compile Include="Ingame\GameProcessor.cs" />
     <Compile Include="Ingame\IngameService.cs" />
     <Compile Include="Ingame\IngameService.Events.cs" />
@@ -99,6 +100,7 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Service.cs" />
+    <Compile Include="HealthChecker.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

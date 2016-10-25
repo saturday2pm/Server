@@ -13,7 +13,7 @@ using ProtocolCS;
 
 namespace Server
 {
-    public class Service<T> : WebSocketBehavior
+    public partial class Service<T> : WebSocketBehavior, ICheckable
     {
         private static Dictionary<Type, MethodInfo> handlers { get; set; }
 
@@ -109,6 +109,19 @@ namespace Server
             }
         }
 
+        /// <summary>
+        /// 각각의 서비스들에서 이 메소드를 상속받아 검사를 수행한다.
+        /// </summary>
+        /// <returns>false일 경우 세션 종료</returns>
+        public virtual bool OnHealthCheck()
+        {
+            return true;
+        }
+        public void OnDispose()
+        {
+            ErrorClose(CloseStatusCode.ServerError, "healthcheck failure");
+        }
+
         protected override void OnOpen()
         {
             Version clientVersion = null;
@@ -126,11 +139,15 @@ namespace Server
                 ErrorClose(CloseStatusCode.ProtocolError, "serverVersion != clientVersion");
                 return;
             }
+
+            HealthChecker.Add(this);
         }
         protected override void OnClose(CloseEventArgs e)
         {
             T trash;
             sessions.TryRemove(currentPlayerId, out trash);
+
+            HealthChecker.Remove(this);
         }
         protected override void OnMessage(MessageEventArgs e)
         {
