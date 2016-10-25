@@ -13,12 +13,19 @@ namespace Server.Ingame
     {
         public static readonly string Path = "/game";
 
+        private IngameSessionState sessionState { get; set; }
         public bool isBotPlayer { get; set; }
         
         static IngameService()
         {
             // IngameService.Match.cs
             InitMatch();
+        }
+
+        public IngameService()
+            : base()
+        {
+            sessionState = IngameSessionState.Connected;
         }
 
         public Player AsPlayer()
@@ -28,6 +35,28 @@ namespace Server.Ingame
                 id = currentPlayerId,
                 name = currentPlayerId.ToString()
             };
+        }
+
+        public override bool OnHealthCheck()
+        {
+            var elapsed = StartTime - DateTime.Now;
+
+            if (sessionState == IngameSessionState.Playing)
+            {
+                // 게임 중이어도 1시간 이내 접속중인것만 인정
+                if (elapsed < TimeSpan.FromHours(1))
+                    return true;
+                // 게임 중인데, 1시간 이상 접속함 -> 비정상
+                else
+                    return false;
+            }
+
+            // 접속한지 30초 지났나?
+            if (elapsed < TimeSpan.FromSeconds(30))
+                return true;
+
+            // Playing 상태 아니고 / 30초 이상 지난 세션은 다 닫음
+            return false;
         }
 
         protected override void OnClose(CloseEventArgs e)
