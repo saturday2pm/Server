@@ -17,10 +17,7 @@ namespace Server.LoadBalancing
             if (hosts == null || hosts.Length == 0)
                 throw new ArgumentNullException(nameof(hosts));
 
-            foreach(var host in hosts)
-            {
-                this.hosts.Enqueue(host);
-            }
+            this.hosts = new ConcurrentQueue<string>(hosts);
         }
 
         public string GetNext()
