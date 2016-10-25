@@ -78,6 +78,7 @@
     <Compile Include="Ingame\IngameService.cs" />
     <Compile Include="Ingame\IngameService.Events.cs" />
     <Compile Include="Ingame\IngameService.Match.cs" />
+    <Compile Include="Ingame\IngameSessionState.cs" />
     <Compile Include="Ingame\MatchProcessor.cs" />
     <Compile Include="Ingame\IMatchResolver.cs" />
     <Compile Include="Ingame\MatchResolver.cs" />

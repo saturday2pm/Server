@@ -63,10 +63,20 @@ namespace Server
             }
         }
 
+        /// <summary>
+        /// 관리 목록에 추가한다.
+        /// 주기적으로 OnHealthCheck가 호출된다.
+        /// </summary>
+        /// <param name="obj">추가할 대상</param>
         public static void Add(ICheckable obj)
         {
             objects.TryAdd(obj);
         }
+
+        /// <summary>
+        /// 관리 목록에서 제거한다.
+        /// </summary>
+        /// <param name="obj">제거할 대상</param>
         public static void Remove(ICheckable obj)
         {
             objects.TryRemove(obj);
