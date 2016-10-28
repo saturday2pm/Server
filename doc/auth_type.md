@@ -5,8 +5,12 @@
 
 ```
 // 다른 query string는 생략합니다. (버전 등)
-ws://localhost?userType=&userId=&accessToken
+ws://localhost?userType=USERTYPE&userId=USERID&accessToken=ACCESSTOKEN
 ```
+* userType : 아래 값중 하나입니다. 모두 소문자로 부탁
+* userId : 각각의 IDP(ID Provider)에서 발급한 유저 고유값
+* accessToken : 유저아이디랑 묶여있는 토큰
+
 
 guest
 ----
