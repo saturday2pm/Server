@@ -62,8 +62,15 @@
     <Compile Include="AI\AutoPlayer.cs" />
     <Compile Include="AI\DummyAi.cs" />
     <Compile Include="AI\IAi.cs" />
+    <Compile Include="Auth\AccessTokenManager.Redis.cs" />
+    <Compile Include="Auth\AccessTokenManager.Simple.cs" />
+    <Compile Include="Auth\AccessTokenProvider.cs" />
+    <Compile Include="Auth\AuthHandler.cs" />
+    <Compile Include="Auth\IAccessTokenManager.cs" />
     <Compile Include="Auth\IDP\Facebook.cs" />
     <Compile Include="Auth\IDP\IDProvider.cs" />
+    <Compile Include="Auth\IDP\Local.cs" />
+    <Compile Include="Auth\UserType.cs" />
     <Compile Include="BroadcastExt.cs" />
     <Compile Include="Concurrency\BoundTask.cs" />
     <Compile Include="Concurrency\BoundTaskPool.cs" />

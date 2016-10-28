@@ -13,6 +13,8 @@ using ProtocolCS;
 
 namespace Server
 {
+    using Auth;
+
     public partial class Service<T> : WebSocketBehavior, ICheckable
     {
         private static Dictionary<Type, MethodInfo> handlers { get; set; }
@@ -109,6 +111,24 @@ namespace Server
             }
         }
 
+        private async Task ProcessLogin(
+            string userType, string userId, string accessToken)
+        {
+            try
+            {
+                var loggedIn = await AuthHandler.Login(
+                    userType, userId, accessToken);
+
+                if (loggedIn == false)
+                    throw new Exception();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                ErrorClose(CloseStatusCode.InvalidData, "login error");
+            }
+        }
+
         /// <summary>
         /// 각각의 서비스들에서 이 메소드를 상속받아 검사를 수행한다.
         /// </summary>
@@ -122,8 +142,10 @@ namespace Server
             ErrorClose(CloseStatusCode.ServerError, "healthcheck failure");
         }
 
-        protected override void OnOpen()
+        protected override async void OnOpen()
         {
+            // 클라이언트 버전 체크
+            #region CHECK_VERSION
             Version clientVersion = null;
             if (Version.TryParse(
                 Context.QueryString.Get("version"),
@@ -139,6 +161,16 @@ namespace Server
                 ErrorClose(CloseStatusCode.ProtocolError, "serverVersion != clientVersion");
                 return;
             }
+            #endregion
+
+            // 로그인
+            #region LOGIN
+            var userType = Context.QueryString.Get("userType");
+            var userId = Context.QueryString.Get("userId");
+            var accessToken = Context.QueryString.Get("accessToken");
+
+            await ProcessLogin(userType, userId, accessToken);
+            #endregion
 
             HealthChecker.Add(this);
         }
