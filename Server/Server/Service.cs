@@ -127,7 +127,7 @@ namespace Server
                     userType, userId, accessToken);
 
                 if (loggedIn == false)
-                    throw new Exception();
+                    throw new InvalidOperationException();
             }
             catch (Exception e)
             {
