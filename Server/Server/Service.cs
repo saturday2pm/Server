@@ -128,6 +128,8 @@ namespace Server
 
                 if (loggedIn == false)
                     throw new InvalidOperationException();
+
+                currentPlayerId = int.Parse(userId);
             }
             catch (Exception e)
             {
