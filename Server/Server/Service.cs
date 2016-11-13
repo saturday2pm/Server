@@ -114,8 +114,15 @@ namespace Server
         private async Task ProcessLogin(
             string userType, string userId, string accessToken)
         {
+            Console.WriteLine($"ProcessLogin({userType}, {userId}, {accessToken}");
+
             try
             {
+                if (string.IsNullOrEmpty(userType))
+                    throw new ArgumentException(nameof(userType));
+                if (string.IsNullOrEmpty(userId))
+                    throw new ArgumentException(nameof(userId));
+
                 var loggedIn = await AuthHandler.Login(
                     userType, userId, accessToken);
 
