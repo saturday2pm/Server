@@ -7,6 +7,8 @@ using System.Threading.Tasks;
 
 using ProtocolCS.Constants;
 
+using GSF;
+
 namespace Server.Ingame
 {
     using AI;
@@ -60,7 +62,7 @@ namespace Server.Ingame
             if (matchState != MatchState.Ready)
                 throw new InvalidOperationException("MatchState != .Ready");
 
-            var idx = GetIndex(playerSession.currentPlayerId);
+            var idx = GetIndex(playerSession.UserId);
 
             players[idx] = playerSession;
 
@@ -75,7 +77,7 @@ namespace Server.Ingame
             // 그사이에 나간사람 없는지 검사
             foreach(var player in players)
             {
-                if (player.isAlive == false)
+                if (player.IsAlive == false)
                     return false;
             }
 

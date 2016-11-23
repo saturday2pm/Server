@@ -7,9 +7,11 @@ using System.Threading.Tasks;
 using ProtocolCS;
 using WebSocketSharp;
 
+using GSF;
+
 namespace Server.Ingame
 {
-    partial class IngameService : Service<IngameService>
+    partial class IngameService : Service<IngameService>, ICheckable
     {
         public static readonly string Path = "/game";
 
@@ -32,12 +34,12 @@ namespace Server.Ingame
         {
             return new Player
             {
-                id = currentPlayerId,
-                name = currentPlayerId.ToString()
+                id = UserId,
+                name = UserId.ToString()
             };
         }
 
-        public override bool OnHealthCheck()
+        public bool OnHealthCheck()
         {
             var elapsed = StartTime - DateTime.Now;
 
@@ -65,7 +67,7 @@ namespace Server.Ingame
                 return;
 
             // 나간 플레이어는 봇으로 대체한다.
-            gameProcessor.ToAutoPlayer(currentPlayerId);
+            gameProcessor.ToAutoPlayer(UserId);
 
             if (gameProcessor.isZombieGame)
             {

@@ -11,6 +11,8 @@ using WebSocketSharp.Server;
 
 using ProtocolCS;
 
+using GSF;
+
 namespace Server
 {
     using Env;
@@ -19,7 +21,7 @@ namespace Server
      
     class Program
     {
-        static WebSocketServer server { get; set; }
+        static GSF.Server server { get; set; }
 
         static void BootstrapServices(string[] args)
         {
@@ -29,9 +31,9 @@ namespace Server
             foreach (var arg in args)
             {
                 if (arg == "--matchmaking")
-                    server.AddWebSocketService<MatchMakingService>(MatchMakingService.Path);
+                    server.WithService<MatchMakingService>(MatchMakingService.Path);
                 if (arg == "--game")
-                    server.AddWebSocketService<IngameService>(IngameService.Path);
+                    server.WithService<IngameService>(IngameService.Path);
             }
         }
         static void ProcessCmdOptions(string[] args)
@@ -42,19 +44,15 @@ namespace Server
         {
             Console.WriteLine("Close Server...");
 
-            server.Stop(CloseStatusCode.Away, "close server");
+            server.Stop("close server");
         }
 
         static void Main(string[] args)
         {
             var ev = ServerEnv.selectedEnv;
 
-            server = new WebSocketServer(ev.port)
-            {
-                ReuseAddress = true,
-                KeepClean = true
-            };
-            
+            server = GSF.Server.Create(ev.port);
+
             if (args.Length == 0)
             {
                 args = new string[]
@@ -67,7 +65,7 @@ namespace Server
             BootstrapServices(args);
             ProcessCmdOptions(args);
             
-            server.Start();
+            server.Run();
 
             while (true)
             {

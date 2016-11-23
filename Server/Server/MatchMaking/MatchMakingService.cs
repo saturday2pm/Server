@@ -8,6 +8,8 @@ using System.Threading.Tasks;
 using ProtocolCS;
 using ProtocolCS.Constants;
 
+using GSF;
+
 namespace Server.MatchMaking
 {
     using Env;
@@ -64,7 +66,7 @@ namespace Server.MatchMaking
             if (clientState != ClientState.Ready)
                 throw new InvalidOperationException("clientState != .Ready");
 
-            currentPlayerId = p.senderId;
+            UserId = p.senderId;
             matchMaker.Enqueue(this, QueueType.Normal);
 
             clientState = ClientState.QueueJoined;
@@ -76,7 +78,7 @@ namespace Server.MatchMaking
             if (clientState != ClientState.Ready)
                 throw new InvalidOperationException("clientState != .Ready");
 
-            currentPlayerId = p.senderId;
+            UserId = p.senderId;
             matchMaker.Enqueue(this, QueueType.BotGame);
 
             clientState = ClientState.QueueJoined;

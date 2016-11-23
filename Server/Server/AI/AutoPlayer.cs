@@ -23,7 +23,7 @@ namespace Server.AI
         {
             var player = new AutoPlayer();
             player.gameProcessor = previousPlayer.gameProcessor;
-            player.currentPlayerId = previousPlayer.currentPlayerId;
+            player.UserId = previousPlayer.UserId;
             player.ai.Initialize(player.gameProcessor.GetPreviousFrames());
 
             return player;
@@ -33,7 +33,7 @@ namespace Server.AI
         public static AutoPlayer Create()
         {
             var player = new AutoPlayer();
-            player.currentPlayerId = ReservedPlayerId.Bot;
+            player.UserId = ReservedPlayerId.Bot;
             player.ai.Initialize(new Frame[] { });
 
             return player;
@@ -57,7 +57,7 @@ namespace Server.AI
         }
 
         #region FAKE_SESSION
-        public override bool isAlive
+        public override bool IsAlive
         {
             get
             {

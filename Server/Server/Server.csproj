@@ -41,6 +41,14 @@
       <HintPath>..\packages\AWSSDK.GameLift.3.3.0\lib\net45\AWSSDK.GameLift.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="GSF, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\GameServerFramework.1.0.0-rc2\lib\net452\GSF.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="GSF.Packet, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\GameServerFramework.Packet.1.0.0-rc1\lib\net35\GSF.Packet.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Newtonsoft.Json, Version=9.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.9.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
@@ -109,7 +117,6 @@
     <Compile Include="MatchMaking\QueueType.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Service.cs" />
     <Compile Include="HealthChecker.cs" />
   </ItemGroup>
   <ItemGroup>

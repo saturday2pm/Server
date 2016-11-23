@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 
 using ProtocolCS;
 
+using GSF;
+
 namespace Server.Ingame
 {
     partial class IngameService : Service<IngameService>
@@ -33,7 +35,7 @@ namespace Server.Ingame
             if (p.frameNo > gameProcessor.currentFrameNo)
                 throw new ArgumentOutOfRangeException("p.frameNo > currentFrameNo");
 
-            if (gameProcessor.AddEvents(currentPlayerId, p.events))
+            if (gameProcessor.AddEvents(UserId, p.events))
             {
                 // 이번 프레임 브로드캐스팅
                 var frameNo = gameProcessor.currentFrameNo;

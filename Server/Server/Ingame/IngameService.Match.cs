@@ -7,6 +7,8 @@ using System.Threading.Tasks;
 
 using ProtocolCS;
 
+using GSF;
+
 namespace Server.Ingame
 {
     partial class IngameService : Service<IngameService>
@@ -22,7 +24,7 @@ namespace Server.Ingame
 
         public async void OnJoinGame(JoinGame p)
         {
-            currentPlayerId = p.senderId;
+            UserId = p.senderId;
 
             var match = await matchResolver.GetMatchInfo(p.matchToken);
             var matchProcessor = new MatchProcessor(match);
