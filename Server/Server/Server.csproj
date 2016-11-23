@@ -70,27 +70,12 @@
     <Compile Include="AI\AutoPlayer.cs" />
     <Compile Include="AI\DummyAi.cs" />
     <Compile Include="AI\IAi.cs" />
-    <Compile Include="Auth\AccessTokenManager.Redis.cs" />
-    <Compile Include="Auth\AccessTokenManager.Simple.cs" />
-    <Compile Include="Auth\AccessTokenProvider.cs" />
-    <Compile Include="Auth\AuthHandler.cs" />
-    <Compile Include="Auth\IAccessTokenManager.cs" />
-    <Compile Include="Auth\IDP\Facebook.cs" />
-    <Compile Include="Auth\IDP\IDProvider.cs" />
-    <Compile Include="Auth\IDP\Local.cs" />
-    <Compile Include="Auth\UserType.cs" />
-    <Compile Include="BroadcastExt.cs" />
-    <Compile Include="Concurrency\BoundTask.cs" />
-    <Compile Include="Concurrency\BoundTaskPool.cs" />
-    <Compile Include="Concurrency\ConcurrentSet.cs" />
-    <Compile Include="Concurrency\TSAnnotations.cs" />
     <Compile Include="Constants\Constants.MatchMaking.cs" />
     <Compile Include="Env\EnvEC2.cs" />
     <Compile Include="Env\EnvLocal.cs" />
     <Compile Include="Env\EnvLocalWithoutDB.cs" />
     <Compile Include="Env\IEnv.cs" />
     <Compile Include="Env\ServerEnv.cs" />
-    <Compile Include="ICheckable.cs" />
     <Compile Include="Ingame\GameProcessor.cs" />
     <Compile Include="Ingame\IngameService.cs" />
     <Compile Include="Ingame\IngameService.Events.cs" />
@@ -117,7 +102,6 @@
     <Compile Include="MatchMaking\QueueType.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="HealthChecker.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
