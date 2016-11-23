@@ -9,9 +9,11 @@ using System.Threading.Tasks;
 using ProtocolCS;
 using ProtocolCS.Constants;
 
+using GSF;
+using GSF.Concurrency;
+
 namespace Server.Ingame
 {
-    using Concurrency;
     using AI;
 
     class GameProcessor
@@ -87,7 +89,7 @@ namespace Server.Ingame
             boundTask.Run(() => {
                 for (int i=0;i<players.Length;i++)
                 {
-                    if (players[i].currentPlayerId == playerId)
+                    if (players[i].UserId == playerId)
                         players[i] = AutoPlayer.MigrateFrom(players[i]);
                 }
             });
