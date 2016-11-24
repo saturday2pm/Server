@@ -67,7 +67,7 @@ namespace Server.MatchMaking
                 throw new InvalidOperationException("clientState != .Ready");
 
             UserId = p.senderId;
-            matchMaker.Enqueue(this, QueueType.Normal);
+            matchMaker.Enqueue(MatchPlayer.FromSession(this), QueueType.Normal);
 
             clientState = ClientState.QueueJoined;
         }
@@ -79,7 +79,7 @@ namespace Server.MatchMaking
                 throw new InvalidOperationException("clientState != .Ready");
 
             UserId = p.senderId;
-            matchMaker.Enqueue(this, QueueType.BotGame);
+            matchMaker.Enqueue(MatchPlayer.FromSession(this), QueueType.BotGame);
 
             clientState = ClientState.QueueJoined;
         }

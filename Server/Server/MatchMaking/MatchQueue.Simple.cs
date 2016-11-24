@@ -11,26 +11,33 @@ namespace Server.MatchMaking
 
     class MatchQueueSimple : IMatchQueue
     {
-        private ConcurrentQueue<MatchMakingService> queue { get; set; }
+        private ConcurrentQueue<MatchPlayer> queue { get; set; }
+        private object queueEnqueueLock = new object();
+
         private int targetPlayersForNextMatch { get; set; }
 
-        public MatchQueueSimple()
+        private int playersPerMatch;
+
+        public MatchQueueSimple(int playersPerMatch)
         {
-            queue = new ConcurrentQueue<MatchMakingService>();
+            this.playersPerMatch = playersPerMatch;
+            this.queue = new ConcurrentQueue<MatchMakingService>();
 
             ResetTargetPlayerCount();
         }
 
-        public void Enqueue(MatchMakingService player)
+        public void Enqueue(MatchPlayer player)
         {
-            queue.Enqueue(player);
+            lock (queueEnqueueLock)
+                queue.Enqueue(player);
         }
+
         public MatchDataInternal Poll()
         {
             if (queue.Count < targetPlayersForNextMatch)
                 return null;
 
-            var players = new MatchMakingService[targetPlayersForNextMatch];
+            var players = new MatchPlayer[targetPlayersForNextMatch];
             for (int i = 0; i < players.Length; i++)
             {
                 if (queue.TryDequeue(out players[i]) == false)
@@ -50,8 +57,9 @@ namespace Server.MatchMaking
                 return;
             }
 
-            targetPlayersForNextMatch = new Random()
-                .Next(Constants.MinPlayerForGame, Constants.MaxPlayerForGame);
+            targetPlayersForNextMatch = playersPerMatch;
+            //targetPlayersForNextMatch = new Random()
+            //    .Next(Constants.MinPlayerForGame, Constants.MaxPlayerForGame);
         }
     }
 }

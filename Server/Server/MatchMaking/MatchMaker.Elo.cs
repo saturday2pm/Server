@@ -15,7 +15,7 @@ namespace Server.MatchMaking
         IMatchQueue elo_2001_9999 { get; set; }
         IMatchQueue botQueue { get; set; }
 
-        public void Enqueue(MatchMakingService player, QueueType queueType)
+        public void Enqueue(MatchPlayer player, QueueType queueType)
         {
             throw new NotImplementedException();
         }

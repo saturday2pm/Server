@@ -16,11 +16,11 @@ namespace Server.MatchMaking
 
         public MatchMakerSimple()
         {
-            normalQueue = new MatchQueueSimple();
-            botQueue = new MatchQueueSimple();
+            normalQueue = new MatchQueueSimple(2);
+            botQueue = new MatchQueueSimple(2);
         }
 
-        public void Enqueue(MatchMakingService player, QueueType queueType)
+        public void Enqueue(MatchPlayer player, QueueType queueType)
         {
             switch (queueType)
             {
@@ -29,7 +29,9 @@ namespace Server.MatchMaking
                     break;
 
                 case QueueType.BotGame:
+                    // TODO : 동시입장 문제 
                     botQueue.Enqueue(player);
+                    botQueue.Enqueue(MatchPlayer.CreateBot());
                     break;
 
                 case QueueType.Nan2:

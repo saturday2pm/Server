@@ -7,8 +7,36 @@ using System.Threading.Tasks;
 using GSF;
 using GSF.Concurrency;
 
+using ProtocolCS;
+using ProtocolCS.Constants;
+
 namespace Server.MatchMaking
 {
+    class MatchPlayer
+    {
+        public int userId { get; private set; }
+        public MatchMakingService session { get; private set; }
+
+        public static MatchPlayer CreateBot()
+        {
+            return new MatchPlayer(ReservedPlayerId.Bot);
+        }
+        public static MatchPlayer FromSession(MatchMakingService session)
+        {
+            return new MatchPlayer(session);
+        }
+
+        private MatchPlayer(int botUserId)
+        {
+            this.userId = botUserId;
+        }
+        private MatchPlayer(MatchMakingService session)
+        {
+            this.userId = session.UserId;
+            this.session = session;
+        }
+    }
+
     interface IMatchMaker
     {
         /// <summary>
@@ -20,7 +48,7 @@ namespace Server.MatchMaking
         /// <param name="player">유저</param>
         /// <param name="queueType">큐 힌트</param>
         [ThreadSafe(As.MultiProducer)]
-        void Enqueue(MatchMakingService player, QueueType queueType);
+        void Enqueue(MatchPlayer player, QueueType queueType);
 
         [NotThreadSafe(As.SingleConsumer)]
         IEnumerable<MatchDataInternal> Poll();
@@ -33,7 +61,7 @@ namespace Server.MatchMaking
         /// </summary>
         /// <param name="player">유저</param>
         [ThreadSafe(As.MultiProducer)]
-        void Enqueue(MatchMakingService player);
+        void Enqueue(MatchPlayer player);
 
         [NotThreadSafe(As.SingleConsumer)]
         MatchDataInternal Poll();

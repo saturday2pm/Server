@@ -41,7 +41,7 @@ namespace Server.MatchMaking
                         await matchResolver.RegisterMatch(matchToken, matchData);
 
                         foreach (var player in matchData.players)
-                            player.OnMatchCreated(matchToken, matchData);
+                            player.session?.OnMatchCreated(matchToken, matchData);
                     });
                 }
 
