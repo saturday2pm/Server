@@ -42,7 +42,7 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="GSF, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\GameServerFramework.1.0.0-rc3\lib\net452\GSF.dll</HintPath>
+      <HintPath>..\packages\GameServerFramework.1.0.0-rc4\lib\net452\GSF.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="GSF.Packet, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
@@ -102,6 +102,8 @@
     <Compile Include="MatchMaking\QueueType.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ServerBuilder.cs" />
+    <Compile Include="ServiceNames.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
